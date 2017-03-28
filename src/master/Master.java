@@ -78,7 +78,7 @@ public class Master implements MasterImp{
 		  }		  
 	}
 	//TODO: Fix the way we deserialize the json file we get from google
-	private static String deserialize(String str){
+	private static String deserializeGooglejson(String str){
 		JSONObject object = new JSONObject(str);
 		/*
 		 * Reference to:
