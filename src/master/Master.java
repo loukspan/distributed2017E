@@ -35,9 +35,9 @@ public class Master implements MasterImp{
 		
 	}
 	
-	public Directions askGoogleDirectionsAPI(String dir){
+	public Directions askGoogleDirectionsAPI(String startlat, String startlon, String endlat, String endlon){
 		//TODO: Fix url: https://developers.google.com/maps/documentation/directions/start#get-a-key
-		String url = "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
+		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+startlat+","+startlon+"&destination="+endlat+","+endlon+"&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
 		System.out.println(sendGet(url));
 		//System.out.println(deserialize(sendGet(url)));
 		return null;

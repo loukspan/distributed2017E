@@ -10,7 +10,7 @@ public interface MasterImp {
 	public void waitForMappers();
 	public void ackToReducers();
 	public void collecDataFromReducers();
-	public Directions askGoogleDirectionsAPI(String dir);
+	public Directions askGoogleDirectionsAPI(String startlon, String startlat, String endlon, String endlat);
 	public boolean updateCache(String dir, Directions newDir);
 	public boolean updateDatabase(String dir, Directions newDir);
 	public void sendResultsToClient();
