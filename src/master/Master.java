@@ -1,12 +1,23 @@
 package master;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+
 import org.json.*;
+
+import com.sun.beans.util.Cache;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import model.Directions;
+import java.util.Map;
+
 
 public class Master implements MasterImp{
+	
+	private static final Map<String, Object> cache = new LinkedHashMap<>();
+
+	
 	public void initialize(){
 		
 	}
@@ -16,7 +27,7 @@ public class Master implements MasterImp{
 	}
 	
 	public Directions searchCache(String dir){
-		return null;
+		return (Directions) cache.get(dir);
 	}
 	
 	public void distributeToMappers(){
@@ -45,6 +56,10 @@ public class Master implements MasterImp{
 	}
 	
 	public boolean updateCache(String dir, Directions newDir){
+		if (!cache.containsKey(dir)){
+			cache.put(dir, new Directions(newDir));
+			return true;
+		}
 		return false;
 		
 	}
