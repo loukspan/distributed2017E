@@ -7,4 +7,7 @@ public class Directions {
 	public Directions(){
 		
 	}
+	public Directions(Directions newDir){
+		
+	}
 }
