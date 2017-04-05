@@ -8,7 +8,7 @@ public interface MasterImp {
 	public Directions searchCache(String dir);
 	public void distributeToMappers();
 	public void waitForMappers();
-	public void askToReducers();
+	public void ackToReducers();
 	public void collecDataFromReducers();
 	public Directions askGoogleDirectionsAPI(String startlon, String startlat, String endlon, String endlat);
 	public boolean updateCache(String dir, Directions newDir);

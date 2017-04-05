@@ -2,17 +2,18 @@ package workers;
 
 import java.util.Map;
 
+import model.Directions;
 import model.Message;
+import model.ReducerThread;
 
 import java.io.*;
 import java.net.*;
 
 
 public class ReduceWorker implements Worker, ReduceWorkerImp{
-	
+	private static Map<String,Object> reducedDirections;
 	@Override
 	public void waitForMasterAck(){
-		this.openServer();
 		//or: new ReduceWorker()
 	}
 
@@ -24,46 +25,14 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 
 	@Override
 	public void sendResults(Map<String, Object> mp) {
-		// TODO Auto-generated method stub
 		
-	}
-	public void openServer() {
-		ServerSocket providerSocket = null;
-		Socket connection = null;
-		try {
-			providerSocket = new ServerSocket (4321);
-			
-
-			while (true) {
-				
-				connection = providerSocket.accept();
-				ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-				
-				System.out.println(in.readUTF());
-				System.out.println((Message) in.readObject());
-				
-				in.close();
-				out.close();
-				connection.close();
-			}
-				
-		} catch (IOException ioException) {
-			ioException.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				providerSocket.close();
-			} catch (IOException ioException) {
-				ioException.printStackTrace();
-			}
-		}
+		
 	}
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
+		
+		sendResults(reduce("", new Object()));
 		
 	}
 
@@ -72,5 +41,28 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		// TODO Auto-generated method stub
 		
 	}
-
+	private ServerSocket providerSocket;
+	private Socket connection = null;
+     
+    private void openServer() {
+        try {
+                providerSocket = new ServerSocket(4321, 10);
+                 
+                while(true){
+                    connection = providerSocket.accept();
+                     
+                    Thread t = new ReducerThread(connection,reducedDirections);
+                    t.start();
+                }
+ 
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            try {
+                providerSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
 }

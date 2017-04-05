@@ -17,6 +17,7 @@ public class Master implements MasterImp{
 	
 	private Directions ourDirections;
 	private static Map<String, Object> cache;
+	private MapWorker myWorker;
 
 	public void initialize(){
 		cache = new LinkedHashMap<>();
@@ -34,17 +35,17 @@ public class Master implements MasterImp{
 	
 	public void distributeToMappers(){
 		/**
-		 * TODO: Fix myThread to open it again
+		 * TODO: Fix myThread to open it again in all methods
 		 */
-		MapWorker myWorker = new MapWorker();
+		myWorker = new MapWorker();
 		myWorker.initialize();
 	}
 	
 	public void waitForMappers(){
-		
+		myWorker.notifyMaster();
 	}
 	
-	public void askToReducers(){
+	public void ackToReducers(){
 		
 	}
 	
