@@ -4,10 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.LinkedHashMap;
 import org.json.*;
+import javafx.concurrent.Worker;
 import okhttp3.*;
+import workers.MapWorker;
 import model.Directions;
 import model.Message;
-
+import model.MyThread;
 import java.util.Map;
 
 
@@ -21,7 +23,9 @@ public class Master implements MasterImp{
 	}
 	
 	public void waitForNewQueriesThread(){
-		
+		MyThread mythread = new MyThread("Queries");
+		new Thread(mythread).start();
+		mythread.run();
 	}
 	
 	public Directions searchCache(String dir){
@@ -29,45 +33,19 @@ public class Master implements MasterImp{
 	}
 	
 	public void distributeToMappers(){
-		
+		/**
+		 * TODO: Fix myThread to open it again
+		 */
+		MapWorker myWorker = new MapWorker();
+		myWorker.initialize();
 	}
 	
 	public void waitForMappers(){
 		
 	}
 	
-	public void ackToReducers(){
-		Socket requestSocket = null;
-		ObjectOutputStream out = null;
-		ObjectInputStream in = null;
-		try {
-			
-			requestSocket = new Socket(InetAddress.getByName("127.0.0.1"), 4321);
-			
-			
-			out = new ObjectOutputStream(requestSocket.getOutputStream());
-			in = new ObjectInputStream(requestSocket.getInputStream());
-			
-			out.writeUTF("Hi");
-			out.flush();
-			
-			out.writeObject(new Message(101, ourDirections));
-			out.flush();
-
-		} catch (UnknownHostException unknownHost) {
-			System.err.println("You are trying to connect to an unknown host!");
-		} catch (IOException ioException) {
-			ioException.printStackTrace();
-		} finally {
-			try {
-				in.close();
-				out.close();
-				requestSocket.close();
-			} catch (IOException ioException) {
-				ioException.printStackTrace();
-			}
-		}
-
+	public void askToReducers(){
+		
 	}
 	
 	public void collecDataFromReducers(){
@@ -85,7 +63,7 @@ public class Master implements MasterImp{
 	
 	public boolean updateCache(String dir, Directions newDir){
 		if (!cache.containsKey(dir)){
-			cache.put(dir, new Directions(newDir));
+			cache.put(dir, newDir);
 			return true;
 		}
 		return false;

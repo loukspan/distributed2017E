@@ -8,7 +8,7 @@ import java.io.*;
 import java.net.*;
 
 
-public class ReduceWorker extends Worker implements ReduceWorkerImp{
+public class ReduceWorker implements Worker, ReduceWorkerImp{
 	
 	@Override
 	public void waitForMasterAck(){
@@ -59,6 +59,18 @@ public class ReduceWorker extends Worker implements ReduceWorkerImp{
 				ioException.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void waitForTasksThread() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
