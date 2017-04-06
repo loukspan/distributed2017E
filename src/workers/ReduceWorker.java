@@ -4,7 +4,6 @@ import java.util.Map;
 
 import model.Directions;
 import model.Message;
-import model.ReducerThread;
 
 import java.io.*;
 import java.net.*;
@@ -41,28 +40,5 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		// TODO Auto-generated method stub
 		
 	}
-	private ServerSocket providerSocket;
-	private Socket connection = null;
-     
-    private void openServer() {
-        try {
-                providerSocket = new ServerSocket(4321, 10);
-                 
-                while(true){
-                    connection = providerSocket.accept();
-                     
-                    Thread t = new ReducerThread(connection,reducedDirections);
-                    t.start();
-                }
- 
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
-            try {
-                providerSocket.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        }
-    }
+	
 }
