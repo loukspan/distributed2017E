@@ -8,4 +8,5 @@ public interface MapWorkerImp extends Worker{
 	public void notifyMaster();
 	public String calculateHash(String s);
 	public void sendToReducers(Map<String, Object> mp);
+	
 }

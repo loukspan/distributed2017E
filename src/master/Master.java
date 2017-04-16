@@ -1,16 +1,11 @@
 package master;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
 import java.util.LinkedHashMap;
-import org.json.*;
-import javafx.concurrent.Worker;
+import java.util.Map;
+import model.*;
 import okhttp3.*;
 import workers.MapWorker;
-import model.Directions;
-import model.Message;
-import model.MyThread;
-import java.util.Map;
 
 
 public class Master implements MasterImp{
@@ -20,7 +15,7 @@ public class Master implements MasterImp{
 	private MapWorker myWorker;
 
 	public void initialize(){
-		cache = new LinkedHashMap<>();
+		cache = new LinkedHashMap<String, Object>();
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -56,9 +51,9 @@ public class Master implements MasterImp{
 	public Directions askGoogleDirectionsAPI(String startlat, String startlon, String endlat, String endlon){
 		//TODO: Fix url: https://developers.google.com/maps/documentation/directions/start#get-a-key
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+startlat+","+startlon+"&destination="+endlat+","+endlon+"&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
-		System.out.println(sendGet(url));
+		//System.out.println(sendGet(url));
 		//System.out.println(deserialize(sendGet(url)));
-		return null;
+		return new Directions(sendGet(url));
 		
 	}
 	
@@ -99,14 +94,5 @@ public class Master implements MasterImp{
 			  return response.body().string();
 		  }		  
 	}
-	//TODO: Fix the way we deserialize the json file we get from google
-	private static String deserializeGooglejson(String str){
-		JSONObject object = new JSONObject(str);
-		/*
-		 * Reference to:
-		 * http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
-		 */
-		
-		return "";
-	}
+	
 }
