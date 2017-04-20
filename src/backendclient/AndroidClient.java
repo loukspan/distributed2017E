@@ -18,6 +18,7 @@ public class AndroidClient {
 		//createandaddcols(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 		//master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378");
 		//new ReducerClient(922, 52).start();
+		System.out.println(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 	}
 	
 	

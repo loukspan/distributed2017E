@@ -3,8 +3,6 @@ package workers;
 import java.util.Map;
 
 import model.Directions;
-import model.Message;
-
 import java.io.*;
 import java.net.*;
 

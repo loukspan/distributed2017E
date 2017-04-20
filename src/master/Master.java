@@ -2,15 +2,11 @@ package master;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-<<<<<<< HEAD
 import java.util.Map;
 import model.*;
-import okhttp3.*;
-=======
-//import org.json.*;
-import javafx.concurrent.Worker;
 //import okhttp3.*;
->>>>>>> origin/master
+//import org.json.*;
+import okhttp3.*;
 import workers.MapWorker;
 
 
@@ -25,9 +21,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void waitForNewQueriesThread(){
-		MyThread mythread = new MyThread("Queries");
-		new Thread(mythread).start();
-		mythread.run();
+		
 	}
 	
 	public Directions searchCache(String dir){
@@ -92,18 +86,16 @@ public class Master implements MasterImp{
 	}
 
 	private	String run(String url) throws IOException {
-		return null;
-		/*OkHttpClient client = new OkHttpClient();
+		
+		OkHttpClient client = new OkHttpClient();
 		  Request request = new Request.Builder()
 		      .url(url)
 		      .build();
 		  try(Response response = client.newCall(request).execute()){
 			  return response.body().string();
-		  }	*/	  
+		  }  
 	}
-<<<<<<< HEAD
-	
-=======
+
 	//TODO: Fix the way we deserialize the json file we get from google
 	private static String deserializeGooglejson(String str){
 		return null;
@@ -115,5 +107,4 @@ public class Master implements MasterImp{
 		
 		return "";*/
 	}
->>>>>>> origin/master
 }
