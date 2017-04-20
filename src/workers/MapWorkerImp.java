@@ -1,12 +1,16 @@
 package workers;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import model.Directions;
 
 public interface MapWorkerImp extends Worker{
 	
-	public Map<String, Object> map(Object o1, Object o2);
+	public Map<Integer, Directions> map();
 	public void notifyMaster();
-	public String calculateHash(String s);
-	public void sendToReducers(Map<String, Object> mp);
+	public int calculateHash(String s) throws NoSuchAlgorithmException, UnsupportedEncodingException;
+	public void sendToReducers(Map<Integer, Directions> mp);
 	
 }

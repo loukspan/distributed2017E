@@ -6,6 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.*;
+
+import javax.ws.rs.core.NewCookie;
+
+import workers.MapWorker;
 import workers.ReduceWorker;
 import master.Master;
 import model.*;
@@ -14,11 +18,14 @@ public class AndroidClient {
 	 
 	public static void main(String[] args){
 		Master master = new Master();
-		//appendLocation(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
+		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
 		//createandaddcols(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 		//master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378");
 		//new ReducerClient(922, 52).start();
-		System.out.println(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
+		//System.out.println(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
+		MapWorker mapWorker = new MapWorker();
+		mapWorker.map();
+		
 	}
 	
 	
@@ -26,7 +33,7 @@ public class AndroidClient {
 		final File currentFilePath = new File(AndroidClient.class.getProtectionDomain()
 				.getCodeSource().getLocation().getPath());
 		
-		String DBFOLDER = "file:///"+ currentFilePath.getParentFile()+ File.separator+"dbsnfiles"+File.separator+"directs.txt";
+		String DBFOLDER = "file:///"+ currentFilePath.getParentFile().getParentFile()+ File.separator+"dbsnfiles"+File.separator+"directs.txt";
 		URL myUri = null;
 		try {
 			myUri = new URL(DBFOLDER);
@@ -34,8 +41,8 @@ public class AndroidClient {
 			Files.write(Paths.get(new URI(myUri.getProtocol(), myUri.getHost(), myUri.getPath(), myUri.getQuery(), null)), response.getBytes(), StandardOpenOption.APPEND);
       
 	    } catch (Exception e) {
-	      System.out.println(e.getMessage());
-	      if(myUri!=null)System.out.println(myUri.toString());
+	      //System.out.println(e.getMessage());
+	      //if(myUri!=null)System.out.println(myUri.toString());
 	    }
 		
 	}

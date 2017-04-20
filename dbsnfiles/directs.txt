@@ -418,3 +418,446 @@
    ],
    "status" : "OK"
 }
+{
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "EjMyODAwLTI4NTAgQmVybGluIFR1cm5waWtlLCBOZXdpbmd0b24sIENUIDA2MTExLCBVU0E",
+         "types" : [ "street_address" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "Ei01MS02OSBSb2Nrd2VsbCBBdmUsIFBsYWludmlsbGUsIENUIDA2MDYyLCBVU0E",
+         "types" : [ "street_address" ]
+      }
+   ],
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 41.6786846,
+               "lng" : -72.7127459
+            },
+            "southwest" : {
+               "lat" : 41.663683,
+               "lng" : -72.8538992
+            }
+         },
+         "copyrights" : "Map data ©2017 Google",
+         "legs" : [
+            {
+               "distance" : {
+                  "text" : "9.5 mi",
+                  "value" : 15250
+               },
+               "duration" : {
+                  "text" : "18 mins",
+                  "value" : 1104
+               },
+               "end_address" : "51-69 Rockwell Ave, Plainville, CT 06062, USA",
+               "end_location" : {
+                  "lat" : 41.677928,
+                  "lng" : -72.85322859999999
+               },
+               "start_address" : "2800-2850 Berlin Turnpike, Newington, CT 06111, USA",
+               "start_location" : {
+                  "lat" : 41.67267349999999,
+                  "lng" : -72.7160707
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "0.4 mi",
+                        "value" : 717
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 38
+                     },
+                     "end_location" : {
+                        "lat" : 41.6786278,
+                        "lng" : -72.7127459
+                     },
+                     "html_instructions" : "Head \u003cb\u003enorth\u003c/b\u003e on \u003cb\u003eBerlin Turnpike\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "eej}FljyzLKEuB}@cCmASIiD{Ai@WcEkBcEoBqB}@iAg@uBeA"
+                     },
+                     "start_location" : {
+                        "lat" : 41.67267349999999,
+                        "lng" : -72.7160707
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.6 mi",
+                        "value" : 1024
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 81
+                     },
+                     "end_location" : {
+                        "lat" : 41.67031190000001,
+                        "lng" : -72.717602
+                     },
+                     "html_instructions" : "Make a \u003cb\u003eU-turn\u003c/b\u003e",
+                     "maneuver" : "uturn-left",
+                     "polyline" : {
+                        "points" : "mjk}FtuxzLI^dCnAfD|Af@TVJ`DzA~At@pB~@hLjFv@^pAl@tB`A|BfAtAl@h@T"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6786278,
+                        "lng" : -72.7127459
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "266 ft",
+                        "value" : 81
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 9
+                     },
+                     "end_location" : {
+                        "lat" : 41.6704977,
+                        "lng" : -72.71827859999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eMain St\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "mvi}F~syzLFR@DDFBF@H@N?LEVw@\\"
+                     },
+                     "start_location" : {
+                        "lat" : 41.67031190000001,
+                        "lng" : -72.717602
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.5 mi",
+                        "value" : 829
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 72
+                     },
+                     "end_location" : {
+                        "lat" : 41.6686629,
+                        "lng" : -72.7278458
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eLouis St\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "swi}FfxyzLT|EJdCB\\`@~ILxCDt@Dd@BVH`@JZJ`@rAhF|AbGJ^F`@Fj@Dh@BZ?LBH@LH`B"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6704977,
+                        "lng" : -72.71827859999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.5 mi",
+                        "value" : 757
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 60
+                     },
+                     "end_location" : {
+                        "lat" : 41.6753926,
+                        "lng" : -72.72918539999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eWillard Ave\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "cli}F`t{zLaGp@sC\\sANcBTqCZaCZcGt@iALqCX"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6686629,
+                        "lng" : -72.7278458
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "1.3 mi",
+                        "value" : 2108
+                     },
+                     "duration" : {
+                        "text" : "3 mins",
+                        "value" : 157
+                     },
+                     "end_location" : {
+                        "lat" : 41.6721203,
+                        "lng" : -72.7541409
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eNew Britain Ave\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "evj}Fl|{zLj@dEDX`@xCXdCLbALbBLfBFpAR|DHnAPdCHrALtBB`@Fx@Bj@Bj@@X@XDz@H~BFhADrA@BBr@JxB@PFdAFjAB`@HjAD~@Fv@Bb@PpCVtDPtDNtDTdFFzA@b@@XFhCB`@?PB`@B^Dh@PhBLlAFp@B\\Z|CHv@Hv@b@xETvBLtA"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6753926,
+                        "lng" : -72.72918539999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.5 mi",
+                        "value" : 828
+                     },
+                     "duration" : {
+                        "text" : "2 mins",
+                        "value" : 92
+                     },
+                     "end_location" : {
+                        "lat" : 41.6712156,
+                        "lng" : -72.7640344
+                     },
+                     "html_instructions" : "Continue onto \u003cb\u003eNewington Ave\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "waj}Fjx`{LHfA?FFz@FnB@\\DjAFlALtCRnEv@rQRnE^zH?L?NC`@"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6721203,
+                        "lng" : -72.7541409
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "338 ft",
+                        "value" : 103
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 25
+                     },
+                     "end_location" : {
+                        "lat" : 41.6720481,
+                        "lng" : -72.76347849999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eEast St\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "c|i}Fdvb{L_BcAeAi@"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6712156,
+                        "lng" : -72.7640344
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.8 mi",
+                        "value" : 1325
+                     },
+                     "duration" : {
+                        "text" : "3 mins",
+                        "value" : 161
+                     },
+                     "end_location" : {
+                        "lat" : 41.6705726,
+                        "lng" : -72.77929569999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eE Main St\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "iaj}Fvrb{L?j@?\\?XBd@@NJlCFpA@TD|@@T@X@\\Fv@JjBX~F\\xHJrBCTN~C@jB@z@HpABZ?D@RJ~ABl@NhCLfCBXBXR~DBj@FtABf@NfDF`AT~E"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6720481,
+                        "lng" : -72.76347849999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "2.9 mi",
+                        "value" : 4612
+                     },
+                     "duration" : {
+                        "text" : "3 mins",
+                        "value" : 183
+                     },
+                     "end_location" : {
+                        "lat" : 41.66921929999999,
+                        "lng" : -72.8310441
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e to merge onto \u003cb\u003eCT-72 W\u003c/b\u003e toward \u003cb\u003eI-84\u003c/b\u003e/\u003cb\u003eBristol\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "axi}Frue{LT?X?H@DBFBHDDDJRHPDPD\\D^B\\Df@FfA@N@L@JJb@DpBJ~DB|A@r@B|B@vABjCBpDBjAFbARbBHl@Nv@Hb@Jd@Pr@Nd@\\|@f@jAl@fA`CvDfAlBNXLVd@dAVx@Nf@ThARjA`@zBjExXDPLx@Hn@vAhJNz@^jCXvB?BTnCJtAf@`HZlEXhEN`CDn@Fv@Bl@@j@?Z?^?TATAl@Cf@En@C^C^EX?BKn@Ih@I\\ETGPMn@cA`EgDpN}CvMW`AMf@UbAU~@G^EPEPiAtEe@fBYpAMj@St@WrAMn@EP[hB[zBk@xDq@rEi@zD_@hCg@lDCTEXCXCXC^CZAZAZ?ZAZ?\\@zA?pB?^Ap@Ab@Ex@GbA?D?D?BBv@"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6705726,
+                        "lng" : -72.77929569999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.5 mi",
+                        "value" : 774
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 27
+                     },
+                     "end_location" : {
+                        "lat" : 41.6704005,
+                        "lng" : -72.8402085
+                     },
+                     "html_instructions" : "Merge onto \u003cb\u003eCT-72 W\u003c/b\u003e/\u003cb\u003eI-84\u003c/b\u003e",
+                     "maneuver" : "merge",
+                     "polyline" : {
+                        "points" : "soi}F~xo{L}@|JGf@]bEW`DOvB[lDUvCCVI~AGpAKlBAf@Cd@An@Ah@A~B"
+                     },
+                     "start_location" : {
+                        "lat" : 41.66921929999999,
+                        "lng" : -72.8310441
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.3 mi",
+                        "value" : 547
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 21
+                     },
+                     "end_location" : {
+                        "lat" : 41.6730312,
+                        "lng" : -72.8453524
+                     },
+                     "html_instructions" : "Take exit \u003cb\u003e33\u003c/b\u003e for \u003cb\u003eCT-72 W\u003c/b\u003e toward \u003cb\u003eBristol\u003c/b\u003e",
+                     "maneuver" : "ramp-right",
+                     "polyline" : {
+                        "points" : "_wi}Fhrq{LMLADCD?FARCrBAx@A\\CVCVGb@E`@GVEVGVGTGPITKXM\\OZKRMROVIJGJOPOPYX[Xg@b@_@\\]XUTIFGFMLMPUXm@dA"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6704005,
+                        "lng" : -72.8402085
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.3 mi",
+                        "value" : 558
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 46
+                     },
+                     "end_location" : {
+                        "lat" : 41.677558,
+                        "lng" : -72.84506019999999
+                     },
+                     "html_instructions" : "Keep \u003cb\u003eright\u003c/b\u003e to continue on \u003cb\u003eExit 2\u003c/b\u003e, follow signs for \u003cb\u003eCT-372\u003c/b\u003e/\u003cb\u003eNew Britain Ave\u003c/b\u003e/\u003cb\u003ePlainville\u003c/b\u003e",
+                     "maneuver" : "keep-right",
+                     "polyline" : {
+                        "points" : "mgj}Flrr{LMBEDGJe@x@e@x@OPKNEDGFIFCBEBEBE@MDIBK@G@I?G?EAC?IAIAKCIEQIq@]_EeBAA_A[SIICCAaAWeASuB_@"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6730312,
+                        "lng" : -72.8453524
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.5 mi",
+                        "value" : 758
+                     },
+                     "duration" : {
+                        "text" : "2 mins",
+                        "value" : 100
+                     },
+                     "end_location" : {
+                        "lat" : 41.6760077,
+                        "lng" : -72.8536452
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eCT-372 W\u003c/b\u003e/\u003cb\u003eNew Britain Ave\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "wck}Frpr{LOEEXFX?@GbAALEdA@nA@|@JjABXD\\LpAFl@BNRlA@LNv@Lv@TlA?@r@~DNv@n@dDp@tDFXAH@B?DLt@Lt@@JDXBZ"
+                     },
+                     "start_location" : {
+                        "lat" : 41.677558,
+                        "lng" : -72.84506019999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "112 ft",
+                        "value" : 34
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 5
+                     },
+                     "end_location" : {
+                        "lat" : 41.6762507,
+                        "lng" : -72.8538992
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eRockwell Ave\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "azj}Fhft{Lo@p@"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6760077,
+                        "lng" : -72.8536452
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.1 mi",
+                        "value" : 195
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 27
+                     },
+                     "end_location" : {
+                        "lat" : 41.677928,
+                        "lng" : -72.85322859999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e to stay on \u003cb\u003eRockwell Ave\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "q{j}Fzgt{LmGkBaAY"
+                     },
+                     "start_location" : {
+                        "lat" : 41.6762507,
+                        "lng" : -72.8538992
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "eej}FljyzLaCcAwCwA{QoI{DeBuBeAI^lHlD~@`@|W|L|JvE~BbAHXHNBXEd@w@\\T|ENbDn@xNJzALx@hEjPR`ALtAH`AH`BaGp@gFl@{RbC{Ef@p@~Ez@~GZfDr@fMl@pJj@jMVdGTdEZfFh@fI`@jJ`@~JN~Eh@`Gp@dHpA~MHnANjD\\lI~Bnh@?\\C`@_BcAeAi@?j@?v@XtGJbCn@`Mh@lLCTN~CBfDLlBLxB`A~Qb@fJT~ET?b@@LFNJTd@Jn@VlDB\\Ln@VbMLrOJnC\\pCXzA\\xAl@bBf@jAl@fAhEdH\\p@|@~Bd@pBt@fEpEjY~BnOx@bGTrChBnW`@vG@|BCbAIvAM|Ae@lC{Mzj@i@bCwCzL_AjEw@dF}AlKuBhOQlBGnB?fGApAG|AGrABv@}@|Je@jFyA~QMvBS~DIfDA~BMLEJGhEQpB[hBe@vAw@`Bq@`AmBhB}AtAy@`Am@dAMBMPkArB[`@[X_@Ng@F[CUE[OqFcCaA]cBg@{Ds@OEEXFZIpAEdA@nA@|@JjAHv@T~Bh@bDpEtV?LLz@XvBo@p@mGkBaAY"
+         },
+         "summary" : "CT-72 W",
+         "warnings" : [],
+         "waypoint_order" : []
+      }
+   ],
+   "status" : "OK"
+}
