@@ -2,9 +2,15 @@ package master;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+<<<<<<< HEAD
 import java.util.Map;
 import model.*;
 import okhttp3.*;
+=======
+//import org.json.*;
+import javafx.concurrent.Worker;
+//import okhttp3.*;
+>>>>>>> origin/master
 import workers.MapWorker;
 
 
@@ -86,13 +92,28 @@ public class Master implements MasterImp{
 	}
 
 	private	String run(String url) throws IOException {
-		OkHttpClient client = new OkHttpClient();
+		return null;
+		/*OkHttpClient client = new OkHttpClient();
 		  Request request = new Request.Builder()
 		      .url(url)
 		      .build();
 		  try(Response response = client.newCall(request).execute()){
 			  return response.body().string();
-		  }		  
+		  }	*/	  
 	}
+<<<<<<< HEAD
 	
+=======
+	//TODO: Fix the way we deserialize the json file we get from google
+	private static String deserializeGooglejson(String str){
+		return null;
+		/*JSONObject object = new JSONObject(str);
+		
+		 * Reference to:
+		 * http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+		 
+		
+		return "";*/
+	}
+>>>>>>> origin/master
 }

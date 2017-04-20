@@ -1,5 +1,4 @@
 package backendclient;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -7,21 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.*;
-
+import workers.ReduceWorker;
 import master.Master;
-
+import model.*;
+// .abcdefghijklmnopqrstuvwxyz
 public class AndroidClient {
 	 
 	public static void main(String[] args){
 		Master master = new Master();
+<<<<<<< HEAD
 		//appendLocation(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 		//createandaddcols(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 	}
-	
-	
-	
-	
-	
 	
 	
 	private static void appendLocation(String response) {		
@@ -94,6 +90,9 @@ public class AndroidClient {
 	              System.out.println(ex.getMessage());
 	          }
 	      }
+		//master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378");
+		new ReducerClient(922, 52).start();
+		
 	}
 	
 }
