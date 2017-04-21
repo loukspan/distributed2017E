@@ -17,13 +17,13 @@ import model.*;
 public class AndroidClient {
 	 
 	public static void main(String[] args){
-		Master master = new Master();
+		//Master master = new Master();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
-		//new ReducerClient(922, 52).start();
 		MapWorker mapWorker = new MapWorker();
 		//mapWorker.map();
-		ReduceWorker reduceWorker = new ReduceWorker(mapWorker.map());
-		System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
+		ReduceWorker reduceWorker = new ReduceWorker();
+		reduceWorker.openServer();
+		//System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
 		//Directions dirs= master.askGoogleDirectionsAPI("33.81","-117.91","34.13","-118.35");
 		System.out.println();
 		

@@ -19,6 +19,9 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 	public ReduceWorker(Map<Integer, Directions> map){
 		reducedDirections=map;
 	}
+	public ReduceWorker() {
+		// TODO Auto-generated constructor stub
+	}
 	public void waitForMasterAck(){
 		//or: new ReduceWorker()
 	}
@@ -37,7 +40,7 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 	}
 	
 	public void sendResults(Directions dirs) {
-				
+		
 	}
 
 
@@ -52,5 +55,50 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+ 
+    public void openServer() {
+        ServerSocket providerSocket = null;
+        Socket connection = null;
+        Map<Integer, Directions> message = null;
+        try {
+            providerSocket = new ServerSocket (4321);
+             
+ 
+            while (true) {
+                 
+                connection = providerSocket.accept();
+                ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
+                
+                do {
+                    try {
+                        message = ((Map<Integer,Directions>)in.readObject());
+                        System.out.println(connection.getInetAddress().getHostAddress()+ " >" + message.get(1).getDirs());
+                        out.writeObject(reduce(message));
+                        out.flush();
+                        break;
+                    } catch (ClassNotFoundException classnot) {
+                        System.err.println("Data received in unknown format");
+                    }catch (Exception e) {
+                    	System.out.println(e.getMessage());
+					}
+                } while (true);
+                 
+                in.close();
+                out.close();
+                connection.close();
+            }
+                 
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            try {
+                providerSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    
+   }
 }

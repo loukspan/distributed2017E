@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class Directions {
+public class Directions implements Serializable{
 	private double startlon, startlat, endlon,endlat;
 	//private ArrayList[]() routes;
 	private String dirs;
