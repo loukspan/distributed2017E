@@ -36,10 +36,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 		            i++;
 		            json="";
 	            }
-	        }
-	        for(int j=0;j<map.size();j++){
-	            System.out.println(map.get(j).getDirs());
-	        }
+	        }	        
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}

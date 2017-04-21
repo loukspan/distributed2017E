@@ -19,12 +19,13 @@ public class AndroidClient {
 	public static void main(String[] args){
 		Master master = new Master();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
-		//createandaddcols(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
-		//master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378");
 		//new ReducerClient(922, 52).start();
-		//System.out.println(master.askGoogleDirectionsAPI("33.812092","-117.918974","34.138117","-118.353378").getDirs());
 		MapWorker mapWorker = new MapWorker();
-		mapWorker.map();
+		//mapWorker.map();
+		ReduceWorker reduceWorker = new ReduceWorker(mapWorker.map());
+		System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
+		//Directions dirs= master.askGoogleDirectionsAPI("33.81","-117.91","34.13","-118.35");
+		System.out.println();
 		
 	}
 	
