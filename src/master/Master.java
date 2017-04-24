@@ -1,16 +1,12 @@
 package master;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.Map;
-
+import java.net.*;
+import java.util.*;
 import model.*;
-
 import org.json.*;
-
 import okhttp3.*;
+import workers.*;
 
 
 public class Master implements MasterImp{
@@ -48,7 +44,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void ackToReducers(){
-		startClient(mappedDirections);
+		startClientforReducer(mappedDirections);
 	}
 	
 	public void collecDataFromReducers(){
@@ -86,7 +82,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void sendResultsToClient(){
-
+		openServerForClient();
 	}
 	
 	// HTTP GET request using OKHTTP
@@ -111,30 +107,30 @@ public class Master implements MasterImp{
 	}
 	
 	
-	public void startClient(Map<Integer, Directions> reducedDirections) {
+	private void startClientforReducer(Map<Integer, Directions> reducedDirections) {
         Socket requestSocket = null;
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
         Directions message;
         try {
-             
+              
             requestSocket = new Socket("172.16.2.46", 4321);
-             
-             
+              
+              
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             in = new ObjectInputStream(requestSocket.getInputStream());
-             
+              
             try{
                 out.writeObject(reducedDirections);
                 out.flush();
                 message = (Directions) in.readObject();
                 System.out.println("Server>" + message.getDirs());
-                 
-                                  
+                  
+                                   
             }catch (ClassNotFoundException classNot) {
                 System.err.println("data received in unknown format");
             }
- 
+  
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
@@ -144,6 +140,51 @@ public class Master implements MasterImp{
                 in.close();
                 out.close();
                 requestSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
+	private void openServerForClient() {
+        ServerSocket providerSocket = null;
+        Socket connection = null;       
+        try {
+            providerSocket = new ServerSocket (4321);
+             
+  
+            while (true) {
+                  
+                connection = providerSocket.accept();
+                ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
+                 
+                do {
+                    try {
+                        ourDirections =((Directions)in.readObject());
+                        System.out.println(connection.getInetAddress().getHostAddress()+ " >" + ourDirections.getStartlon());
+                        MapWorker mapWorker=new MapWorker();
+                        ReduceWorker reduceWorker = new ReduceWorker();
+                        Directions reduced = reduceWorker.reduce(mapWorker.map());
+                        out.writeObject(reduced);
+                        out.flush();
+                        break;
+  
+                    } catch (ClassNotFoundException classnot) {
+                        System.out.print(classnot.getMessage());
+                        System.err.println("Data received in unknown format");
+                    }
+                } while (true);
+                  
+                in.close();
+                out.close();
+                connection.close();
+            }
+                  
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            try {
+                providerSocket.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

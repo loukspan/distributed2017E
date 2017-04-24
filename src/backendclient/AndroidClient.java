@@ -9,6 +9,7 @@ import java.sql.*;
 
 import javax.ws.rs.core.NewCookie;
 
+import queryres.CreateQuery;
 import workers.MapWorker;
 import workers.ReduceWorker;
 import master.Master;
@@ -19,12 +20,14 @@ public class AndroidClient {
 	public static void main(String[] args){
 		//Master master = new Master();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
-		MapWorker mapWorker = new MapWorker();
+		//MapWorker mapWorker = new MapWorker();
 		//mapWorker.map();
-		ReduceWorker reduceWorker = new ReduceWorker();
-		reduceWorker.openServer();
+		//ReduceWorker reduceWorker = new ReduceWorker();
+		//reduceWorker.openServer();
 		//System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
 		//Directions dirs= master.askGoogleDirectionsAPI("33.81","-117.91","34.13","-118.35");
+		CreateQuery query = new CreateQuery(41.672690,-72.716124,41.677929,-72.853233);
+		query.sendQueryToServer(query.getAskedDirs());
 		System.out.println();
 		
 	}
