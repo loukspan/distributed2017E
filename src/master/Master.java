@@ -1,46 +1,54 @@
 package master;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
 import java.util.Map;
+
 import model.*;
+
 import org.json.*;
+
 import okhttp3.*;
-import workers.MapWorker;
 
 
 public class Master implements MasterImp{
 	
 	private Directions ourDirections;
-	private static Map<String, Object> cache;
-	private MapWorker myWorker;
+	private static LinkedList<Directions> cache;
+	private Map<Integer, Directions> mappedDirections;
 
 	public void initialize(){
-		cache = new LinkedHashMap<String, Object>();
+		cache = new LinkedList<Directions>();
 	}
 	
 	public void waitForNewQueriesThread(){
 		
 	}
 	
-	public Directions searchCache(String dir){
-		return (Directions) cache.get(dir);
+	public Directions searchCache(Directions dir){
+		Directions idir=null;
+		for(int i=0; i<cache.size(); i++){
+			idir=cache.get(i);
+			if(dir.equals(idir))
+				return idir;
+		}
+		return idir;
 	}
 	
 	public void distributeToMappers(){
 		/**
 		 * TODO: Fix myThread to open it again in all methods
 		 */
-		myWorker = new MapWorker();
-		myWorker.initialize();
+
 	}
 	
 	public void waitForMappers(){
-		myWorker.notifyMaster();
 	}
 	
 	public void ackToReducers(){
-		
+		startClient(mappedDirections);
 	}
 	
 	public void collecDataFromReducers(){
@@ -53,25 +61,32 @@ public class Master implements MasterImp{
 		//System.out.println(sendGet(url));
 		//System.out.println(deserialize(sendGet(url)));
 		return new Directions(sendGet(url));
+	}
+	
+	public boolean updateCache(Directions newDir){
+		boolean isThere=true;
+		Directions idir;
+		for(int i=0; i<cache.size(); i++){
+			idir=cache.get(i);
+			if(newDir.equals(idir)){
+				isThere=false;
+				i=cache.size()+2000;
+			}
+		}
+		
+		if(isThere)cache.add(newDir);
+		
+		return isThere;
 		
 	}
 	
-	public boolean updateCache(String dir, Directions newDir){
-		if (!cache.containsKey(dir)){
-			cache.put(dir, newDir);
-			return true;
-		}
-		return false;
-		
-	}
 	
 	public boolean updateDatabase(String dir, Directions newDir){
 		return false;
-		
 	}
 	
 	public void sendResultsToClient(){
-		System.out.println(ourDirections.toString());
+
 	}
 	
 	// HTTP GET request using OKHTTP
@@ -94,4 +109,44 @@ public class Master implements MasterImp{
 			  return response.body().string();
 		  }  
 	}
+	
+	
+	public void startClient(Map<Integer, Directions> reducedDirections) {
+        Socket requestSocket = null;
+        ObjectOutputStream out = null;
+        ObjectInputStream in = null;
+        Directions message;
+        try {
+             
+            requestSocket = new Socket("172.16.2.46", 4321);
+             
+             
+            out = new ObjectOutputStream(requestSocket.getOutputStream());
+            in = new ObjectInputStream(requestSocket.getInputStream());
+             
+            try{
+                out.writeObject(reducedDirections);
+                out.flush();
+                message = (Directions) in.readObject();
+                System.out.println("Server>" + message.getDirs());
+                 
+                                  
+            }catch (ClassNotFoundException classNot) {
+                System.err.println("data received in unknown format");
+            }
+ 
+        } catch (UnknownHostException unknownHost) {
+            System.err.println("You are trying to connect to an unknown host!");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                out.close();
+                requestSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
 }

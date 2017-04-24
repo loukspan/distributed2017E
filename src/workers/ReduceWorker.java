@@ -30,11 +30,16 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 	public Map<Integer, Directions> getReducedDirections() {
 		return reducedDirections;
 	}
+	
+	private void setReducedDirections(Map<Integer, Directions> reducedDirections) {
+		this.reducedDirections= reducedDirections;
+	}
+	
 	public Directions reduce(Map<Integer, Directions> mp) {
 		/*Directions directions =*/
 		Directions counted;
 		
-		counted = mp.entrySet().stream().parallel().filter(p->p.getValue().getDirs().contains("34.1385374")).
+		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().getDirs().contains("34.1385374")).
 				map(p->p.getValue()).reduce((sum, p)->sum).get();
 		return counted;
 	}

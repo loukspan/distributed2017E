@@ -44,7 +44,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 	}
 
 	public void notifyMaster(){
-		
+		sendToReducers(map());
 	}
 	
 	

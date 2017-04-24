@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 
 public class Directions implements Serializable{
@@ -53,7 +54,13 @@ public class Directions implements Serializable{
 	public void setStartlat(double startlat) {
 		this.startlat = startlat;
 	}
-	public void deserializeGooglejson(String directions){
+	
+	public boolean equals(Directions otherDirs){
+		return (this.getStartlat()==otherDirs.getStartlat())&&(this.getStartlon()==otherDirs.getStartlon())
+				&&(this.getEndlat()==otherDirs.getEndlat())&&(this.getEndlon()==otherDirs.getEndlon());
+	}
+	
+	private void deserializeGooglejson(String directions){
 		JSONObject object = new JSONObject(directions);
 		JSONArray array = object.getJSONArray("routes");
 		JSONObject route= new JSONObject(array.get(0).toString());
