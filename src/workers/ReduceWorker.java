@@ -9,9 +9,6 @@ import model.Directions;
 import java.io.*;
 import java.net.*;
 
-import javax.print.attribute.standard.RequestingUserName;
-
-import org.bouncycastle.jcajce.provider.asymmetric.dsa.DSASigner.detDSA;
 
 
 public class ReduceWorker implements Worker, ReduceWorkerImp{

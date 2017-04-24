@@ -6,18 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.*;
-
-import javax.ws.rs.core.NewCookie;
-
 import queryres.CreateQuery;
-import workers.MapWorker;
-import workers.ReduceWorker;
-import master.Master;
 import model.*;
 // .abcdefghijklmnopqrstuvwxyz
 public class AndroidClient {
-	 
+	private static java.util.Scanner scanner = new java.util.Scanner(System.in);
 	public static void main(String[] args){
+		clientMain();
 		//Master master = new Master();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
 		//MapWorker mapWorker = new MapWorker();
@@ -26,10 +21,24 @@ public class AndroidClient {
 		//reduceWorker.openServer();
 		//System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
 		//Directions dirs= master.askGoogleDirectionsAPI("33.81","-117.91","34.13","-118.35");
-		CreateQuery query = new CreateQuery(41.672690,-72.716124,41.677929,-72.853233);
-		query.sendQueryToServer(query.getAskedDirs());
 		System.out.println();
 		
+	}
+	
+	private static void clientMain(){
+		Directions userDirs = new Directions();
+		System.out.println("Inser your location:");
+		System.out.print("Starting Latitude: ");
+		userDirs.setStartlat(scanner.nextDouble());
+		System.out.print("Starting longtitude: ");
+		userDirs.setStartlon(scanner.nextDouble());
+		System.out.print("Ending latitude: ");
+		userDirs.setEndlat(scanner.nextDouble());
+		System.out.print("Ending Longtitude: ");
+		userDirs.setEndlon(scanner.nextDouble());
+		System.out.println(userDirs.toString());
+		//CreateQuery query = new CreateQuery(41.672690,-72.716124,41.677929,-72.853233);
+		//query.sendQueryToServer(query.getAskedDirs());
 	}
 	
 	
