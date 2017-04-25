@@ -1,5 +1,6 @@
 package master;
 
+import java.awt.Desktop.Action;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -11,16 +12,21 @@ import workers.*;
 
 public class Master implements MasterImp{
 	
+	private Directions askedDirections;
 	private Directions ourDirections;
 	private static LinkedList<Directions> cache;
 	private Map<Integer, Directions> mappedDirections;
+	
+	public Master(){
+		cache = new LinkedList<Directions>();
+	}
 
 	public void initialize(){
-		cache = new LinkedList<Directions>();
+		this.openServerForClient();
 	}
 	
 	public void waitForNewQueriesThread(){
-		
+		openServerForClient();
 	}
 	
 	public Directions searchCache(Directions dir){
@@ -41,6 +47,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void waitForMappers(){
+		startClientForMapper(ourDirections);//prosoxi sto object: ourDirections
 	}
 	
 	public void ackToReducers(){
@@ -52,10 +59,7 @@ public class Master implements MasterImp{
 	}
 	
 	public Directions askGoogleDirectionsAPI(String startlat, String startlon, String endlat, String endlon){
-		//TODO: Fix url: https://developers.google.com/maps/documentation/directions/start#get-a-key
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+startlat+","+startlon+"&destination="+endlat+","+endlon+"&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
-		//System.out.println(sendGet(url));
-		//System.out.println(deserialize(sendGet(url)));
 		return new Directions(sendGet(url));
 	}
 	
@@ -106,88 +110,61 @@ public class Master implements MasterImp{
 		  }  
 	}
 	
-	
-	private void startClientforReducer(Map<Integer, Directions> reducedDirections) {
-        Socket requestSocket = null;
-        ObjectOutputStream out = null;
-        ObjectInputStream in = null;
-        Directions message;
-        try {
-              
+	private void startClientForMapper(Directions askedDirections) {
+		Socket requestSocket = null;
+        Map<Integer, Directions> mappedDirections;
+        try {              
             requestSocket = new Socket("172.16.2.46", 4321);
-              
-              
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
-            in = new ObjectInputStream(requestSocket.getInputStream());
-              
-            try{
-                out.writeObject(reducedDirections);
-                out.flush();
-                message = (Directions) in.readObject();
-                System.out.println("Server>" + message.getDirs());
-                  
-                                   
-            }catch (ClassNotFoundException classNot) {
-                System.err.println("data received in unknown format");
-            }
-  
-        } catch (UnknownHostException unknownHost) {
-            System.err.println("You are trying to connect to an unknown host!");
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
+            ActionsForMappers actionsForMappers = new ActionsForMappers(requestSocket, askedDirections);
+            actionsForMappers.start();
+            mappedDirections = actionsForMappers.getMappedDirs();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	System.err.println(e.getMessage());
+		} finally {
             try {
-                in.close();
-                out.close();
                 requestSocket.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
-    }
-	private void openServerForClient() {
-        ServerSocket providerSocket = null;
-        Socket connection = null;       
+	}
+	
+	private void startClientforReducer(Map<Integer, Directions> reducedDirections) {
+        Socket requestSocket = null;
+        Directions message;
         try {
-            providerSocket = new ServerSocket (4321);
-             
-  
-            while (true) {
-                  
-                connection = providerSocket.accept();
-                ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-                 
-                do {
-                    try {
-                        ourDirections =((Directions)in.readObject());
-                        System.out.println(connection.getInetAddress().getHostAddress()+ " >" + ourDirections.getStartlon());
-                        MapWorker mapWorker=new MapWorker();
-                        ReduceWorker reduceWorker = new ReduceWorker();
-                        Directions reduced = reduceWorker.reduce(mapWorker.map());
-                        out.writeObject(reduced);
-                        out.flush();
-                        break;
-  
-                    } catch (ClassNotFoundException classnot) {
-                        System.out.print(classnot.getMessage());
-                        System.err.println("Data received in unknown format");
-                    }
-                } while (true);
-                  
-                in.close();
-                out.close();
-                connection.close();
-            }
-                  
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
+              
+            requestSocket = new Socket("172.16.2.46", 5000);
+            ActionsForReducer actionsForReducer = new ActionsForReducer(requestSocket, mappedDirections);
+            actionsForReducer.start();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	System.err.println(e.getMessage());
+		} finally {
             try {
-                providerSocket.close();
+                requestSocket.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
+    }	
+    
+	private void openServerForClient() {
+		ServerSocket providerSocket = null;
+	    Socket connection = null;
+        
+            try {
+				providerSocket = new ServerSocket (2001);
+				connection = providerSocket.accept();
+				ServerMasterforClient serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
+				serverMasterforClient.start();
+				//serverMasterforClient.sleep(1000);
+				serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
+				serverMasterforClient.writeOutAndClose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}        
+                
     }
 }

@@ -49,7 +49,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 	
 	
 	
-	@Override
+	
 	public int calculateHash(String str){
 		String plaintext = str;
 	    int hash = str.hashCode();
@@ -94,13 +94,13 @@ public class MapWorker implements Worker, MapWorkerImp{
 		return Math.pow(Math.abs(elat - slat), 2)+Math.pow(Math.abs(elon-slon), 2);
 	}
 
-	@Override
+	
 	public void initialize() {
 		sendToReducers(map());
 		
 	}
 
-	@Override
+	
 	public void waitForTasksThread() {
 		// TODO Auto-generated method stub
 		

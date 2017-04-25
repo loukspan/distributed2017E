@@ -6,18 +6,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.*;
+
+import master.Master;
 import queryres.CreateQuery;
+import workers.MapWorker;
+import workers.ReduceWorker;
 import model.*;
 // .abcdefghijklmnopqrstuvwxyz
 public class AndroidClient {
 	private static java.util.Scanner scanner = new java.util.Scanner(System.in);
 	public static void main(String[] args){
-		clientMain();
-		//Master master = new Master();
+		masterMain();
+		//clientMain();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
 		//MapWorker mapWorker = new MapWorker();
 		//mapWorker.map();
-		//ReduceWorker reduceWorker = new ReduceWorker();
 		//reduceWorker.openServer();
 		//System.out.println(reduceWorker.reduce(reduceWorker.getReducedDirections()).getEndlat());
 		//Directions dirs= master.askGoogleDirectionsAPI("33.81","-117.91","34.13","-118.35");
@@ -41,6 +44,20 @@ public class AndroidClient {
 		//query.sendQueryToServer(query.getAskedDirs());
 	}
 	
+	private static void masterMain(){
+		Master master = new Master();
+		master.initialize();
+	}
+	
+	private static void workerMain(){
+		MapWorker worker = new MapWorker();
+		worker.initialize();
+	}
+	
+	private void reducerMain() {
+		ReduceWorker reduceWorker = new ReduceWorker();
+		reduceWorker.initialize();
+	}
 	
 	private static void appendLocation(String response) {		
 		final File currentFilePath = new File(AndroidClient.class.getProtectionDomain()
