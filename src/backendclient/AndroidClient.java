@@ -39,9 +39,9 @@ public class AndroidClient {
 		userDirs.setEndlat(scanner.nextDouble());
 		System.out.print("Ending Longtitude: ");
 		userDirs.setEndlon(scanner.nextDouble());
-		System.out.println(userDirs.toString());
-		//CreateQuery query = new CreateQuery(41.672690,-72.716124,41.677929,-72.853233);
-		//query.sendQueryToServer(query.getAskedDirs());
+		//System.out.println(userDirs.toString());
+		CreateQuery query = new CreateQuery(userDirs.getStartlat(),userDirs.getStartlon(),userDirs.getEndlat(),userDirs.getEndlon());
+		query.sendQueryToServer(query.getAskedDirs());
 	}
 	
 	private static void masterMain(){

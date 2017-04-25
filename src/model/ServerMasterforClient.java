@@ -40,13 +40,14 @@ public class ServerMasterforClient extends Thread{
         try {
              
             try{
-            	askedDirections =((Directions)in.readObject());            	
-            }catch(ClassNotFoundException classnot){            
-                 
+            	askedDirections =((Directions)in.readObject());      
+            	System.out.println(askedDirections.toString());
+            	
+            }catch(ClassNotFoundException classnot){              
                 System.err.println("Data received in unknown format!");
             }            
-            } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+    	   e.printStackTrace();
         }
     }
     

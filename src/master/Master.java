@@ -1,11 +1,13 @@
 package master;
 
-import java.awt.Desktop.Action;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 import model.*;
+
 import org.json.*;
+
 import okhttp3.*;
 import workers.*;
 
@@ -16,13 +18,14 @@ public class Master implements MasterImp{
 	private Directions ourDirections;
 	private static LinkedList<Directions> cache;
 	private Map<Integer, Directions> mappedDirections;
-	
+	private ServerMasterforClient serverMasterforClient;
 	public Master(){
 		cache = new LinkedList<Directions>();
 	}
 
 	public void initialize(){
-		this.openServerForClient();
+		waitForNewQueriesThread();
+		sendResultsToClient();
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -86,7 +89,8 @@ public class Master implements MasterImp{
 	}
 	
 	public void sendResultsToClient(){
-		openServerForClient();
+		serverMasterforClient.setReducedDirections(ourDirections);
+		closeServerForClient();
 	}
 	
 	// HTTP GET request using OKHTTP
@@ -155,16 +159,18 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (2001);
+				providerSocket = new ServerSocket (4321);
 				connection = providerSocket.accept();
-				ServerMasterforClient serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
-				serverMasterforClient.start();
-				//serverMasterforClient.sleep(1000);
-				serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
+				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
+				serverMasterforClient.run();
+				//serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
 				serverMasterforClient.writeOutAndClose();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}        
-                
+			}              
     }
+	
+	private void closeServerForClient() {
+		serverMasterforClient.writeOutAndClose();
+	}
 }

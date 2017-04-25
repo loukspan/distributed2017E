@@ -48,7 +48,7 @@ public class CreateQuery implements CreateQueryImp{
                 out.writeObject(getAskedDirs());
                 out.flush();
                 message = (Directions) in.readObject();
-                System.out.println("Server>" + message.getDirs());
+                System.out.println("Server>" + message.toString());
                  //TODO: return reduced results from Master
                                   
             }catch (ClassNotFoundException classNot) {
