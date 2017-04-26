@@ -16,9 +16,8 @@ public class ActionsForMappers extends Thread{
     	try {
             out = new ObjectOutputStream(connection.getOutputStream());
             in = new ObjectInputStream(connection.getInputStream());
- 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     
@@ -32,8 +31,10 @@ public class ActionsForMappers extends Thread{
              
             try{
             	out.writeObject(this.askedDirections);
+                System.out.println("asdafasfafasfasf");
                 out.flush();
             	this.mappedDirections =((Map<Integer, Directions>)in.readObject());
+            	System.out.println(mappedDirections.get(0).toString());
             	
             }catch(ClassNotFoundException classnot){            
                  
@@ -43,7 +44,8 @@ public class ActionsForMappers extends Thread{
              
              
             } catch (IOException e) {
-            e.printStackTrace();
+            	System.out.println(e.getMessage());
+            //e.printStackTrace();
         } finally {
             try {
                 in.close();

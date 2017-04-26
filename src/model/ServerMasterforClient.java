@@ -52,9 +52,10 @@ public class ServerMasterforClient extends Thread{
     }
     
     
-    public void writeOutAndClose() {
+    public void writeOutAndClose(Directions reduced) {
     	
     	try {
+    		this.setReducedDirections(reduced);
     		out.writeObject(this.getReducedDirs());
     		out.flush();
             in.close();

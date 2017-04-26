@@ -18,7 +18,7 @@ public class Master implements MasterImp{
 	private Directions ourDirections;
 	private static LinkedList<Directions> cache;
 	private Map<Integer, Directions> mappedDirections;
-	private ServerMasterforClient serverMasterforClient;
+	private static ServerMasterforClient serverMasterforClient;
 	public Master(){
 		cache = new LinkedList<Directions>();
 	}
@@ -26,6 +26,11 @@ public class Master implements MasterImp{
 	public void initialize(){
 		waitForNewQueriesThread();
 		sendResultsToClient();
+		//askedDirections = new Directions(1, 1, 1, 45454);
+		//startClientForMapper();
+		//MapWorker mapWorker = new MapWorker();
+		//mappedDirections=mapWorker.map();
+		//startClientforReducer(mappedDirections);
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -50,7 +55,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void waitForMappers(){
-		startClientForMapper(ourDirections);//prosoxi sto object: ourDirections
+		//startClientForMapper(ourDirections);//prosoxi sto object: ourDirections
 	}
 	
 	public void ackToReducers(){
@@ -89,7 +94,7 @@ public class Master implements MasterImp{
 	}
 	
 	public void sendResultsToClient(){
-		serverMasterforClient.setReducedDirections(ourDirections);
+		ourDirections= new Directions(45, 1, 1, 1);
 		closeServerForClient();
 	}
 	
@@ -114,13 +119,13 @@ public class Master implements MasterImp{
 		  }  
 	}
 	
-	private void startClientForMapper(Directions askedDirections) {
+	private void startClientForMapper() {
 		Socket requestSocket = null;
         Map<Integer, Directions> mappedDirections;
         try {              
-            requestSocket = new Socket("172.16.2.46", 4321);
+            requestSocket = new Socket("172.16.3.7", 4345);
             ActionsForMappers actionsForMappers = new ActionsForMappers(requestSocket, askedDirections);
-            actionsForMappers.start();
+            actionsForMappers.run();
             mappedDirections = actionsForMappers.getMappedDirs();
         } catch (Exception e) {
         	e.printStackTrace();
@@ -164,13 +169,13 @@ public class Master implements MasterImp{
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.run();
 				//serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
-				serverMasterforClient.writeOutAndClose();
+				//serverMasterforClient.writeOutAndClose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}              
     }
 	
 	private void closeServerForClient() {
-		serverMasterforClient.writeOutAndClose();
+		serverMasterforClient.writeOutAndClose(ourDirections);
 	}
 }
