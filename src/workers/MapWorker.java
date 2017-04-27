@@ -3,16 +3,24 @@ package workers;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import model.Directions;
+import model.ServerWorkerForMaster;
 import backendclient.AndroidClient;
 
 public class MapWorker implements Worker, MapWorkerImp{
 
+	private static ServerWorkerForMaster serverWorkerForMaster;
+	private static Map<Integer, Directions> mappedDirections;
+    private static Directions askedDirections;
 	public Map<Integer, Directions> map(){
 		final File currentFilePath = new File(AndroidClient.class.getProtectionDomain()
 				.getCodeSource().getLocation().getPath());
@@ -40,11 +48,12 @@ public class MapWorker implements Worker, MapWorkerImp{
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
+		mappedDirections = map;
 		return map;
 	}
 
 	public void notifyMaster(){
-		sendToReducers(map());
+		sendToReducers();
 	}
 	
 	
@@ -78,8 +87,9 @@ public class MapWorker implements Worker, MapWorkerImp{
 	    return hash;
     }
 	
-	public void sendToReducers(Map<Integer, Directions> map){
-		
+	public void sendToReducers(){
+		map();
+		closeServerForClient();
 	}
 	
 	/**
@@ -96,8 +106,9 @@ public class MapWorker implements Worker, MapWorkerImp{
 
 	
 	public void initialize() {
-		sendToReducers(map());
-		
+		//sendToReducers(map());
+		openServerForMaster();
+		sendToReducers();
 	}
 
 	
@@ -105,4 +116,25 @@ public class MapWorker implements Worker, MapWorkerImp{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void openServerForMaster() {        
+        ServerSocket providerSocket = null;
+        Socket connection = null;
+         
+            try {
+                providerSocket = new ServerSocket (4321);
+                connection = providerSocket.accept();
+                serverWorkerForMaster = new ServerWorkerForMaster(connection);
+                serverWorkerForMaster.run();
+                //serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
+            } catch (UnknownHostException unknownHost) {
+                System.err.println("You are trying to connect to an unknown host!");
+            }catch (IOException ioException) {
+                ioException.printStackTrace();
+            }    
+    }
+     
+    private void closeServerForClient() {
+        serverWorkerForMaster.writeOutAndClose(mappedDirections);
+    }
 }

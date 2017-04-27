@@ -164,7 +164,7 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (4321);
+				providerSocket = new ServerSocket (4345);
 				connection = providerSocket.accept();
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.run();
