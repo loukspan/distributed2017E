@@ -17,17 +17,17 @@ public class Master implements MasterImp{
 	private Directions askedDirections;
 	private Directions ourDirections;
 	private static LinkedList<Directions> cache;
-	private Map<Integer, Directions> mappedDirections;
+	private static Map<Integer, Directions> mappedDirections=null;;
 	private static ServerMasterforClient serverMasterforClient;
 	public Master(){
 		cache = new LinkedList<Directions>();
 	}
 
 	public void initialize(){
-		waitForNewQueriesThread();
-		sendResultsToClient();
-		//askedDirections = new Directions(1, 1, 1, 45454);
-		//startClientForMapper();
+		//waitForNewQueriesThread();
+		//sendResultsToClient();
+		askedDirections = new Directions(1, 1, 1, 45454);
+		startClientForMapper();
 		//MapWorker mapWorker = new MapWorker();
 		//mappedDirections=mapWorker.map();
 		//startClientforReducer(mappedDirections);
@@ -121,12 +121,20 @@ public class Master implements MasterImp{
 	
 	private void startClientForMapper() {
 		Socket requestSocket = null;
-        Map<Integer, Directions> mappedDirections;
+		ObjectInputStream inputStream = null;
+		ObjectOutputStream out = null;
         try {              
-            requestSocket = new Socket("172.16.3.7", 4345);
-            ActionsForMappers actionsForMappers = new ActionsForMappers(requestSocket, askedDirections);
-            actionsForMappers.run();
-            mappedDirections = actionsForMappers.getMappedDirs();
+            requestSocket = new Socket("192.168.1.73", 4345);
+            out = new ObjectOutputStream(requestSocket.getOutputStream());
+            inputStream = new ObjectInputStream(requestSocket.getInputStream());
+            out.writeObject(askedDirections);
+            out.flush();
+            this.mappedDirections= ((Map<Integer, Directions>) inputStream.readObject());
+            System.out.println(mappedDirections.get(0).toString());
+            //ActionsForMappers actionsForMappers = new ActionsForMappers(requestSocket, askedDirections);
+            //actionsForMappers.run();
+            //mappedDirections = actionsForMappers.getMappedDirs();
+            
         } catch (Exception e) {
         	e.printStackTrace();
         	System.err.println(e.getMessage());
