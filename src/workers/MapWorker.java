@@ -1,13 +1,8 @@
 package workers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;

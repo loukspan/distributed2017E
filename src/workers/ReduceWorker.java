@@ -12,9 +12,11 @@ import java.net.*;
 
 
 public class ReduceWorker implements Worker, ReduceWorkerImp{
+	private Directions askedDirections;
 	private static Map<Integer, Directions> reducedDirections=null;
-	public ReduceWorker(Map<Integer, Directions> map){
+	public ReduceWorker(Map<Integer, Directions> map, Directions askedDirections){
 		reducedDirections=map;
+		this.askedDirections=askedDirections;
 	}
 	public ReduceWorker() {
 		// TODO Auto-generated constructor stub
@@ -36,7 +38,7 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		/*Directions directions =*/
 		Directions counted;
 		
-		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().getDirs().contains("34.1385374")).
+		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(askedDirections)).
 				map(p->p.getValue()).reduce((sum, p)->sum).get();
 		return counted;
 	}

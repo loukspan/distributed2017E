@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Map;
 
+import org.bouncycastle.jcajce.provider.symmetric.Threefish;
+
 public class ServerMasterforClient extends Thread{
 
 	ObjectInputStream in;
@@ -38,10 +40,24 @@ public class ServerMasterforClient extends Thread{
     public void run() {
  
         try {
-             
             try{
-            	askedDirections =((Directions)in.readObject());      
-            	System.out.println(askedDirections.toString());
+            	while(true){
+            		String className = in.readObject().getClass().getName();
+            		if (className.equals("String")) {
+						String message = in.readObject().toString();
+						if(message.equals("bye")){
+							write(message);
+							close();
+						}
+					}else if(className.equals("Directions")){
+						askedDirections =((Directions)in.readObject());  
+						System.out.println(askedDirections.toString());
+						synchronized(this){
+							write(getAskedDirections());
+							notify();
+						}
+					}
+            	}      	
             	
             }catch(ClassNotFoundException classnot){              
                 System.err.println("Data received in unknown format!");
@@ -50,14 +66,30 @@ public class ServerMasterforClient extends Thread{
     	   e.printStackTrace();
         }
     }
+    private void write(String message) {
+    	try {
+			out.writeObject(message);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     
+    public void write(Directions reduced) {
+    	this.setReducedDirections(reduced);
+    	try {
+			out.writeObject(this.getReducedDirs());
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     
-    public void writeOutAndClose(Directions reduced) {
+    public void close() {
     	
     	try {
-    		this.setReducedDirections(reduced);
-    		out.writeObject(this.getReducedDirs());
-    		out.flush();
             in.close();
             out.close();
         } catch (IOException ioException) {
