@@ -3,11 +3,7 @@ package master;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import model.*;
-
-import org.json.*;
-
 import okhttp3.*;
 import workers.*;
 
@@ -124,7 +120,7 @@ public class Master implements MasterImp{
 		ObjectInputStream inputStream = null;
 		ObjectOutputStream out = null;
         try {              
-            requestSocket = new Socket("192.168.1.73", 4345);
+            requestSocket = new Socket("192.168.1.87", 4232);
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             inputStream = new ObjectInputStream(requestSocket.getInputStream());
             out.writeObject(askedDirections);
@@ -149,12 +145,20 @@ public class Master implements MasterImp{
 	
 	private void startClientforReducer(Map<Integer, Directions> reducedDirections) {
         Socket requestSocket = null;
+        ObjectOutputStream out=null;
+        ObjectInputStream inputStream = null;
         Directions message;
         try {
               
             requestSocket = new Socket("172.16.2.46", 5000);
-            ActionsForReducer actionsForReducer = new ActionsForReducer(requestSocket, mappedDirections);
-            actionsForReducer.start();
+            out= new ObjectOutputStream(requestSocket.getOutputStream());
+            inputStream = new ObjectInputStream(requestSocket.getInputStream());
+            out.writeObject(mappedDirections);
+            out.flush();
+            this.ourDirections = ((Directions)inputStream.readObject());
+            //ActionsForReducer actionsForReducer = new ActionsForReducer(requestSocket, mappedDirections);
+            //actionsForReducer.start();
+            
         } catch (Exception e) {
         	e.printStackTrace();
         	System.err.println(e.getMessage());
@@ -174,6 +178,7 @@ public class Master implements MasterImp{
             try {
 				providerSocket = new ServerSocket (4345);
 				connection = providerSocket.accept();
+				connection.setKeepAlive(true);
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.run();
 				//serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
