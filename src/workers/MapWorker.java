@@ -122,7 +122,7 @@ public class MapWorker implements Worker, MapWorkerImp{
         Socket connection = null;
          
             try {
-                providerSocket = new ServerSocket (4321);
+                providerSocket = new ServerSocket (4232);
                 connection = providerSocket.accept();
                 serverWorkerForMaster = new ServerWorkerForMaster(connection);
                 serverWorkerForMaster.run();

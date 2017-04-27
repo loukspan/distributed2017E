@@ -124,7 +124,7 @@ public class Master implements MasterImp{
 		ObjectInputStream inputStream = null;
 		ObjectOutputStream out = null;
         try {              
-            requestSocket = new Socket("192.168.1.73", 4345);
+            requestSocket = new Socket("192.168.1.73", 4231);
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             inputStream = new ObjectInputStream(requestSocket.getInputStream());
             out.writeObject(askedDirections);
