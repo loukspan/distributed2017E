@@ -1,12 +1,7 @@
 package model;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
-import java.util.Map;
-
-import org.bouncycastle.jcajce.provider.symmetric.Threefish;
 
 public class ServerMasterforClient extends Thread{
 
@@ -41,7 +36,9 @@ public class ServerMasterforClient extends Thread{
  
         try {
             try{
-            	while(true){
+            	askedDirections =((Directions)in.readObject());      
+            	System.out.println(askedDirections.toString());
+            	/*while(true){
             		String className = in.readObject().getClass().getName();
             		if (className.equals("String")) {
 						String message = in.readObject().toString();
@@ -57,7 +54,7 @@ public class ServerMasterforClient extends Thread{
 							notify();
 						}
 					}
-            	}      	
+            	}    */  	
             	
             }catch(ClassNotFoundException classnot){              
                 System.err.println("Data received in unknown format!");

@@ -3,11 +3,8 @@ package master;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import model.*;
 import okhttp3.*;
-import workers.*;
-
 
 public class Master implements MasterImp{
 	
@@ -46,7 +43,7 @@ public class Master implements MasterImp{
 	
 	public void distributeToMappers(){
 		/**
-		 * TODO: Fix myThread to open it again in all methods
+		 * TODO: Fix Thread to open it again in all methods
 		 */
 
 	}
@@ -93,7 +90,8 @@ public class Master implements MasterImp{
 	public void sendResultsToClient(){
 		ourDirections= new Directions(45, 1, 1, 1);
 		serverMasterforClient.setReducedDirections(ourDirections);
-		synchronized(serverMasterforClient){
+		serverMasterforClient.write(serverMasterforClient.getReducedDirs());
+		/*synchronized(serverMasterforClient){
 			serverMasterforClient.setReducedDirections(ourDirections);
 			try {
 				serverMasterforClient.wait();
@@ -101,7 +99,8 @@ public class Master implements MasterImp{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
+		//serverMasterforClient.close();
 	}
 	
 	// HTTP GET request using OKHTTP
@@ -186,7 +185,7 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (4345);
+				providerSocket = new ServerSocket (4321);
 				connection = providerSocket.accept();
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.start();

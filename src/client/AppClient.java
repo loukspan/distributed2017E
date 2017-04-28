@@ -1,19 +1,16 @@
-package backendclient;
-import java.io.File;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.sql.*;
+package client;
 
+import java.io.File;
+import java.net.*;
+import java.nio.file.*;
+import java.sql.*;
 import master.Master;
 import queryres.CreateQuery;
-import workers.MapWorker;
-import workers.ReduceWorker;
+import workers.*;
 import model.*;
+
 // .abcdefghijklmnopqrstuvwxyz
-public class AndroidClient {
+public class AppClient {
 	private static java.util.Scanner scanner = new java.util.Scanner(System.in);
 	public static void main(String[] args){
 		masterMain();
@@ -61,7 +58,7 @@ public class AndroidClient {
 	}
 	
 	private static void appendLocation(String response) {		
-		final File currentFilePath = new File(AndroidClient.class.getProtectionDomain()
+		final File currentFilePath = new File(AppClient.class.getProtectionDomain()
 				.getCodeSource().getLocation().getPath());
 		
 		String DBFOLDER = "file:///"+ currentFilePath.getParentFile().getParentFile()+ File.separator+"dbsnfiles"+File.separator+"directs.txt";

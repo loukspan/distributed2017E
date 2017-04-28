@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,9 +22,7 @@ public class Directions implements Serializable{
 	
 	public String toString() {
 		return "SLat: "+this.getStartlat()+"\tSLon: "+this.getStartlon()
-			+"\nELat: "+this.getEndlat()+"\tELon: "+this.getEndlon();
-		
-		
+			+"\nELat: "+this.getEndlat()+"\tELon: "+this.getEndlon();	
 	}
 	
 	public Directions get(){
