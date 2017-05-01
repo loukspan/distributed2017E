@@ -13,9 +13,10 @@ import model.*;
 public class AppClient {
 	private static java.util.Scanner scanner = new java.util.Scanner(System.in);
 	public static void main(String[] args){
-		masterMain();
+		//masterMain();
 		//clientMain();
 		//workerMain();
+		reducerMain();
 		//appendLocation(master.askGoogleDirectionsAPI("41.672690","-72.716124","41.677929","-72.853233").getDirs());
 		//MapWorker mapWorker = new MapWorker();
 		//mapWorker.map();
@@ -52,7 +53,7 @@ public class AppClient {
 		worker.initialize();
 	}
 	
-	private void reducerMain() {
+	private static void reducerMain() {
 		ReduceWorker reduceWorker = new ReduceWorker();
 		reduceWorker.initialize();
 	}
