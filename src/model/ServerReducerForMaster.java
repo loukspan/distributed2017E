@@ -7,7 +7,7 @@ import java.util.Map;
 public class ServerReducerForMaster extends Thread{
 	ObjectInputStream in;
 	ObjectOutputStream out;
-	Directions reducedDirectons;
+	Directions reducedDirectons,askedDirections;
 	Map<Integer, Directions> mappedDirections;
 	public ServerReducerForMaster(Socket connection) {
 		
@@ -24,7 +24,7 @@ public class ServerReducerForMaster extends Thread{
 	}
 	
 	public Directions getAskedDirections() {
-		return this.reducedDirectons;
+		return this.askedDirections;
 	}
 	
 	public void setMappedDirections(Map<Integer, Directions> mappedDirections){
@@ -37,8 +37,9 @@ public class ServerReducerForMaster extends Thread{
 	         
 	        try{
 	        	//System.out.println(in.readObject().getClass().getName());
-	        	reducedDirectons =((Directions)in.readObject());      
-	        	System.out.println(reducedDirectons.toString());
+	        	mappedDirections =((Map<Integer, Directions>)in.readObject());
+	        	askedDirections = (Directions)in.readObject();
+	        	System.out.println(askedDirections.toString());
 	        	
 	        }catch(ClassNotFoundException classnot){              
 	            System.err.println("Data received in unknown format!");
@@ -53,8 +54,8 @@ public class ServerReducerForMaster extends Thread{
 	public void writeOutAndClose(Directions reducedDirections) {
 		
 		try {
-			this.setMappedDirections(mappedDirections);
-			out.writeObject(this.getMappedDirs());
+			
+			out.writeObject(reducedDirections);
 			out.flush();
 	        in.close();
 	        out.close();

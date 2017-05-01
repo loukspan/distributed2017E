@@ -38,7 +38,7 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		/*Directions directions =*/
 		Directions counted;
 		
-		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(askedDirections)).
+		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(this.askedDirections)).
 				map(p->p.getValue()).reduce((sum, p)->sum).get();
 		return counted;
 	}
@@ -50,7 +50,7 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 
 	public void initialize() {
 		openServerForMaster();
-		reducedDirections=reduce(mappedDirections);
+		reducedDirections=reduce(this.mappedDirections);
 		sendResults(reducedDirections);
 	}
 
@@ -65,11 +65,12 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
         Socket connection = null;
          
             try {
-                providerSocket = new ServerSocket (4232);
+                providerSocket = new ServerSocket (5000);
                 connection = providerSocket.accept();
                 serverReducerForMaster = new ServerReducerForMaster(connection);
                 serverReducerForMaster.start();
-                mappedDirections=serverReducerForMaster.getMappedDirs();
+        		this.askedDirections=serverReducerForMaster.getAskedDirections();
+                this.mappedDirections=serverReducerForMaster.getMappedDirs();
             } catch (UnknownHostException unknownHost) {
                 System.err.println("You are trying to connect to an unknown host!");
             }catch (IOException ioException) {
