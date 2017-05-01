@@ -17,7 +17,24 @@ public class Master implements MasterImp{
 		cache = new LinkedList<Directions>();
 	}
 
-	public void initialize(){
+	public void initialize(){		
+		//waitForNewQueriesThread();
+		//sendResultsToClient();
+		askedDirections = new Directions(33.8116953, -117.9180063, 34.1385374, -118.3529798);
+		ourDirections = searchCache(askedDirections);
+		if(ourDirections==null){
+			startClientForMapper();
+			System.out.println(mappedDirections.get(0).getDirs());
+			startClientforReducer(mappedDirections);
+		}
+		if(ourDirections==null){
+			ourDirections=askGoogleDirectionsAPI(33.8116953, -117.9180063,34.1385374, -118.3529798);
+		}
+		System.out.println(ourDirections);
+		
+		
+		
+
 		waitForNewQueriesThread();
 		sendResultsToClient();
 		//askedDirections = new Directions(1, 1, 1, 45454);
@@ -60,7 +77,7 @@ public class Master implements MasterImp{
 		
 	}
 	
-	public Directions askGoogleDirectionsAPI(String startlat, String startlon, String endlat, String endlon){
+	public Directions askGoogleDirectionsAPI(double startlat, double startlon, double endlat, double endlon){
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+startlat+","+startlon+"&destination="+endlat+","+endlon+"&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
 		return new Directions(sendGet(url));
 	}
@@ -90,7 +107,7 @@ public class Master implements MasterImp{
 	public void sendResultsToClient(){
 		ourDirections= new Directions(45, 1, 1, 1);
 		serverMasterforClient.setReducedDirections(ourDirections);
-		serverMasterforClient.write(serverMasterforClient.getReducedDirs());
+		//serverMasterforClient.write(serverMasterforClient.getReducedDirs());
 		/*synchronized(serverMasterforClient){
 			serverMasterforClient.setReducedDirections(ourDirections);
 			try {
@@ -129,7 +146,7 @@ public class Master implements MasterImp{
 		ObjectInputStream inputStream = null;
 		ObjectOutputStream out = null;
         try {              
-            requestSocket = new Socket("192.168.1.73", 4231);
+            requestSocket = new Socket("192.168.1.87", 4232);
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             inputStream = new ObjectInputStream(requestSocket.getInputStream());
             out.writeObject(askedDirections);
@@ -159,10 +176,12 @@ public class Master implements MasterImp{
         Directions message;
         try {
               
-            requestSocket = new Socket("172.16.2.46", 5000);
+            requestSocket = new Socket("192.168.1.94", 5000);
             out= new ObjectOutputStream(requestSocket.getOutputStream());
             inputStream = new ObjectInputStream(requestSocket.getInputStream());
             out.writeObject(mappedDirections);
+            out.flush();
+            out.writeObject(askedDirections);
             out.flush();
             this.ourDirections = ((Directions)inputStream.readObject());
             //ActionsForReducer actionsForReducer = new ActionsForReducer(requestSocket, mappedDirections);
