@@ -1,20 +1,12 @@
 package workers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.net.*;
+import java.security.*;
 import java.util.*;
-
-import model.Directions;
-import model.ServerWorkerForMaster;
-import backendclient.AndroidClient;
+import client.AppClient;
+import model.*;
 
 public class MapWorker implements Worker, MapWorkerImp{
 
@@ -22,7 +14,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 	private static Map<Integer, Directions> mappedDirections;
     private static Directions askedDirections;
 	public Map<Integer, Directions> map(){
-		final File currentFilePath = new File(AndroidClient.class.getProtectionDomain()
+		final File currentFilePath = new File(AppClient.class.getProtectionDomain()
 				.getCodeSource().getLocation().getPath());
 		
 		String DBFOLDER = currentFilePath.getParentFile().getParentFile()+ File.separator+"dbsnfiles"+File.separator+"directs.txt";

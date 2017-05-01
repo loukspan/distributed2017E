@@ -5,8 +5,6 @@ import java.net.*;
 import java.util.*;
 import model.*;
 import okhttp3.*;
-import workers.*;
-
 
 public class Master implements MasterImp{
 	
@@ -19,8 +17,7 @@ public class Master implements MasterImp{
 		cache = new LinkedList<Directions>();
 	}
 
-	public void initialize(){
-		
+	public void initialize(){		
 		//waitForNewQueriesThread();
 		//sendResultsToClient();
 		askedDirections = new Directions(33.8116953, -117.9180063, 34.1385374, -118.3529798);
@@ -37,6 +34,14 @@ public class Master implements MasterImp{
 		
 		
 		
+
+		waitForNewQueriesThread();
+		sendResultsToClient();
+		//askedDirections = new Directions(1, 1, 1, 45454);
+		//startClientForMapper();
+		//MapWorker mapWorker = new MapWorker();
+		//mappedDirections=mapWorker.map();
+		//startClientforReducer(mappedDirections);
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -55,7 +60,7 @@ public class Master implements MasterImp{
 	
 	public void distributeToMappers(){
 		/**
-		 * TODO: Fix myThread to open it again in all methods
+		 * TODO: Fix Thread to open it again in all methods
 		 */
 
 	}
@@ -101,7 +106,18 @@ public class Master implements MasterImp{
 	
 	public void sendResultsToClient(){
 		ourDirections= new Directions(45, 1, 1, 1);
-		closeServerForClient();
+		serverMasterforClient.setReducedDirections(ourDirections);
+		//serverMasterforClient.write(serverMasterforClient.getReducedDirs());
+		/*synchronized(serverMasterforClient){
+			serverMasterforClient.setReducedDirections(ourDirections);
+			try {
+				serverMasterforClient.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}*/
+		//serverMasterforClient.close();
 	}
 	
 	// HTTP GET request using OKHTTP
@@ -188,9 +204,8 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (4345);
+				providerSocket = new ServerSocket (4321);
 				connection = providerSocket.accept();
-				connection.setKeepAlive(true);
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.start();
 				//serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
@@ -199,8 +214,4 @@ public class Master implements MasterImp{
 				e.printStackTrace();
 			}              
     }
-	
-	private void closeServerForClient() {
-		serverMasterforClient.writeOutAndClose(ourDirections);
-	}
 }
