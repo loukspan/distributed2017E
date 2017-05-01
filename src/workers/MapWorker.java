@@ -40,7 +40,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
-		mappedDirections = map;
+		this.mappedDirections = map;
 		return map;
 	}
 
