@@ -62,17 +62,7 @@ public class ServerMasterforClient extends Thread{
         } catch (IOException e) {
     	   e.printStackTrace();
         }
-    }
-    private void write(String message) {
-    	try {
-			out.writeObject(message);
-			out.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-    
+    }    
     public void write(Directions reduced) {
     	this.setReducedDirections(reduced);
     	try {
