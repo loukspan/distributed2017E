@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.*;
 import model.*;
 import okhttp3.*;
+import workers.MapWorker;
+import workers.ReduceWorker;
 
 public class Master implements MasterImp{
 	
@@ -22,9 +24,12 @@ public class Master implements MasterImp{
 		askedDirections = serverMasterforClient.getAskedDirections();
 		ourDirections = searchCache(askedDirections);
 		if(ourDirections==null){
-			startClientForMapper();
-			//System.out.println(mappedDirections.get(0).getDirs());
-			startClientforReducer(mappedDirections);
+			MapWorker mapWorker = new MapWorker();
+			mappedDirections = mapWorker.map();
+			ReduceWorker reduceWorker=new ReduceWorker(mappedDirections, askedDirections);
+			ourDirections= reduceWorker.reduce(mappedDirections);
+			//startClientForMapper();
+			//startClientforReducer(mappedDirections);
 		}
 		if(ourDirections==null){
 			ourDirections=askGoogleDirectionsAPI(askedDirections.getStartlat(),askedDirections.getStartlon(),
@@ -32,17 +37,7 @@ public class Master implements MasterImp{
 			
 		}
 		System.out.println(ourDirections.toString());
-		
-		
-		
-
-		
 		sendResultsToClient();
-		//askedDirections = new Directions(1, 1, 1, 45454);
-		//startClientForMapper();
-		//MapWorker mapWorker = new MapWorker();
-		//mappedDirections=mapWorker.map();
-		//startClientforReducer(mappedDirections);
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -208,7 +203,7 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (4006);
+				providerSocket = new ServerSocket (4321);
 				connection = providerSocket.accept();
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.run();

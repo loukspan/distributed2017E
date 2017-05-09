@@ -38,23 +38,7 @@ public class ServerMasterforClient extends Thread{
             try{
             	askedDirections =((Directions)in.readObject());      
             	System.out.println(askedDirections.toString());
-            	/*while(true){
-            		String className = in.readObject().getClass().getName();
-            		if (className.equals("String")) {
-						String message = in.readObject().toString();
-						if(message.equals("bye")){
-							write(message);
-							close();
-						}
-					}else if(className.equals("Directions")){
-						askedDirections =((Directions)in.readObject());  
-						System.out.println(askedDirections.toString());
-						synchronized(this){
-							write(getAskedDirections());
-							notify();
-						}
-					}
-            	}    */  	
+            
             	
             }catch(ClassNotFoundException classnot){              
                 System.err.println("Data received in unknown format!");
@@ -71,6 +55,8 @@ public class ServerMasterforClient extends Thread{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			close();
 		}
 	}
     
