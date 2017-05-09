@@ -28,6 +28,8 @@ public class Master implements MasterImp{
 			mappedDirections = mapWorker.map();
 			ReduceWorker reduceWorker=new ReduceWorker(mappedDirections, askedDirections);
 			ourDirections= reduceWorker.reduce(mappedDirections);
+			//startClientForMapper();
+			//startClientforReducer(mappedDirections);
 		}
 		if(ourDirections==null){
 			ourDirections=askGoogleDirectionsAPI(askedDirections.getStartlat(),askedDirections.getStartlon(),
@@ -35,6 +37,7 @@ public class Master implements MasterImp{
 			
 		}
 		System.out.println(ourDirections.toString());
+		sendResultsToClient();
 	}
 	
 	public void waitForNewQueriesThread(){
@@ -201,7 +204,7 @@ public class Master implements MasterImp{
 	    Socket connection = null;
         
             try {
-				providerSocket = new ServerSocket (4006);
+				providerSocket = new ServerSocket (4321);
 				connection = providerSocket.accept();
 				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
 				serverMasterforClient.run();
