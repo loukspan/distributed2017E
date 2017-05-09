@@ -54,9 +54,13 @@ public class ServerReducerForMaster extends Thread{
 	public void writeOutAndClose(Directions reducedDirections) {
 		
 		try {
-			
-			out.writeObject(reducedDirections);
-			out.flush();
+			if (reducedDirections == null ){
+				out.writeObject("null");
+				out.flush();
+			}else{
+				out.writeObject(reducedDirections);
+				out.flush();
+			}
 	        in.close();
 	        out.close();
 	    } catch (IOException ioException) {
