@@ -5,7 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Directions implements Serializable{
-	private double startlon, startlat, endlon,endlat;
+	/**
+   * 
+   */
+  private static final long serialVersionUID = -3616074050459610955L;
+  private double startlon, startlat, endlon,endlat;
 	//private ArrayList[]() routes;
 	private String dirs;
 	public Directions(String dirs){
