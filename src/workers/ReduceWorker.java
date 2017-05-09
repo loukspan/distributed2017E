@@ -1,6 +1,8 @@
 package workers;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
+
 import model.Directions;
 import model.ServerReducerForMaster;
 import model.ServerWorkerForMaster;
@@ -36,10 +38,14 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 	
 	public Directions reduce(Map<Integer, Directions> mp) {
 		/*Directions directions =*/
-		Directions counted;
+		Directions counted = null;
+		try {
+			counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(this.askedDirections)).
+					map(p->p.getValue()).reduce((sum, p)->sum).get();
+		} catch (NoSuchElementException e) {
+			System.out.println(e.getMessage());
+		}
 		
-		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(this.askedDirections)).
-				map(p->p.getValue()).reduce((sum, p)->sum).get();
 		return counted;
 	}
 	
@@ -65,10 +71,10 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
         Socket connection = null;
          
             try {
-                providerSocket = new ServerSocket (5000);
+                providerSocket = new ServerSocket (4005);
                 connection = providerSocket.accept();
                 serverReducerForMaster = new ServerReducerForMaster(connection);
-                serverReducerForMaster.start();
+                serverReducerForMaster.run();
         		this.askedDirections=serverReducerForMaster.getAskedDirections();
                 this.mappedDirections=serverReducerForMaster.getMappedDirs();
             } catch (UnknownHostException unknownHost) {

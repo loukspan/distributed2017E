@@ -173,7 +173,6 @@ public class Master implements MasterImp{
         Socket requestSocket = null;
         ObjectOutputStream out=null;
         ObjectInputStream inputStream = null;
-        Directions message;
         try {
               
             requestSocket = new Socket("172.16.1.60", 4005);
