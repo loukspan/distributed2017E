@@ -1,13 +1,18 @@
 package model;
 
+import java.awt.font.TextAttribute;
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
+
+import org.apache.commons.lang.ObjectUtils.Null;
 
 public class ServerWorkerForMaster extends Thread{
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	Directions askedDirections;
+	Object readAppend;
+	boolean hasAPI= false;
 	Map<Integer, Directions> mappedDirections;
 	
 	public ServerWorkerForMaster(Socket connection) {
@@ -49,7 +54,9 @@ public class ServerWorkerForMaster extends Thread{
 	 		   e.printStackTrace();
 			}            
 	    
-	}	
+	}
+	
+	
 	
 	public void writeOutAndClose(Map<Integer, Directions> mappedDirections) {
 		
@@ -57,10 +64,24 @@ public class ServerWorkerForMaster extends Thread{
 			this.setMappedDirections(mappedDirections);
 			out.writeObject(this.getMappedDirs());
 			out.flush();
+			readAppend = in.readObject();
+			if(readAppend!=null){
+				hasAPI=true;
+			}
 	        in.close();
 	        out.close();
 	    } catch (IOException ioException) {
 	    	ioException.printStackTrace();
-	    }
+	    }catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Object getReadAppend() {
+		return readAppend;
+	}
+
+	public boolean isHasAPI() {
+		return hasAPI;
 	}
 }
