@@ -7,11 +7,11 @@ import org.json.JSONObject;
 
 public class Directions implements Serializable{
 
-		/**
-		 * 
-		 */
-	private static final long serialVersionUID = -3616074050459610955L;
-	private double startlon, startlat, endlon,endlat;
+	/**
+   * 
+   */
+  private static final long serialVersionUID = -7981370642425531305L;
+  private double startlon, startlat, endlon,endlat;
 	private LinkedList<Direction> steps= new LinkedList<Direction>();
 	private String dirs, duration,distance, startAddress, endAddress;
 

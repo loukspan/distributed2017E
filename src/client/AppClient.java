@@ -15,8 +15,8 @@ import model.*;
 public class AppClient {
 	private static java.util.Scanner scanner = new java.util.Scanner(System.in);
 	public static void main(String[] args){
-	    testing();
-		//masterMain();
+	    //testing();
+		masterMain();
 		//reducerMain();
 		//clientMain();
 		//workerMain();

@@ -4,13 +4,18 @@
 package model;
 
 import org.json.JSONObject;
+import java.io.Serializable;
 
 /**
  * @author tasos
  *
  */
-public class Direction {
-	private String distance, duration;
+public class Direction implements Serializable{
+	/**
+   * 
+   */
+  private static final long serialVersionUID = -4734384092116845509L;
+  private String distance, duration;
 	private double startLat,endLat,startLon,endLon;
 	
 	public Direction(JSONObject step){
