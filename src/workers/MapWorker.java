@@ -3,6 +3,9 @@ package workers;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.*;
 import java.util.*;
 import client.AppClient;
@@ -40,7 +43,7 @@ public class MapWorker implements Worker, MapWorkerImp{
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
-		mappedDirections = map;
+		this.mappedDirections = map;
 		return map;
 	}
 
@@ -101,6 +104,9 @@ public class MapWorker implements Worker, MapWorkerImp{
 		//sendToReducers(map());
 		openServerForMaster();
 		sendToReducers();
+		if(serverWorkerForMaster.isHasAPI()){
+			appendLocation(((Directions)serverWorkerForMaster.getReadAppend()).getDirs());
+		}
 	}
 
 	
@@ -129,4 +135,22 @@ public class MapWorker implements Worker, MapWorkerImp{
     private void closeServerForClient() {
         serverWorkerForMaster.writeOutAndClose(mappedDirections);
     }
+    
+    private static void appendLocation(String response) {		
+		final File currentFilePath = new File(AppClient.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath());
+		
+		String DBFOLDER = "file:///"+ currentFilePath.getParentFile().getParentFile()+ File.separator+"dbsnfiles"+File.separator+"directs.txt";
+		URL myUri = null;
+		try {
+			myUri = new URL(DBFOLDER);
+			System.out.println(myUri.toString());
+			Files.write(Paths.get(new URI(myUri.getProtocol(), myUri.getHost(), myUri.getPath(), myUri.getQuery(), null)), response.getBytes(), StandardOpenOption.APPEND);
+      
+	    } catch (Exception e) {
+	      //System.out.println(e.getMessage());
+	      //if(myUri!=null)System.out.println(myUri.toString());
+	    }
+		
+	}
 }

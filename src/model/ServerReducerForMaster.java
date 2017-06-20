@@ -1,30 +1,24 @@
 package model;
 
-import java.awt.font.TextAttribute;
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils.Null;
-
-public class ServerWorkerForMaster extends Thread{
+public class ServerReducerForMaster extends Thread{
 	ObjectInputStream in;
 	ObjectOutputStream out;
-	Directions askedDirections;
-	Object readAppend;
-	boolean hasAPI= false;
+	Directions reducedDirectons,askedDirections;
 	Map<Integer, Directions> mappedDirections;
-	
-	public ServerWorkerForMaster(Socket connection) {
-	   try {
-	        out = new ObjectOutputStream(connection.getOutputStream());
-	        in = new ObjectInputStream(connection.getInputStream());
-	
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
-	
+	public ServerReducerForMaster(Socket connection) {
+		
+		   try {
+		        out = new ObjectOutputStream(connection.getOutputStream());
+		        in = new ObjectInputStream(connection.getInputStream());
+		
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		}
 	public Map<Integer, Directions> getMappedDirs(){
 	  	return this.mappedDirections;
 	}
@@ -43,7 +37,8 @@ public class ServerWorkerForMaster extends Thread{
 	         
 	        try{
 	        	//System.out.println(in.readObject().getClass().getName());
-	        	askedDirections =((Directions)in.readObject());      
+	        	mappedDirections =((Map<Integer, Directions>)in.readObject());
+	        	askedDirections = (Directions)in.readObject();
 	        	System.out.println(askedDirections.toString());
 	        	
 	        }catch(ClassNotFoundException classnot){              
@@ -54,34 +49,22 @@ public class ServerWorkerForMaster extends Thread{
 	 		   e.printStackTrace();
 			}            
 	    
-	}
+	}	
 	
-	
-	
-	public void writeOutAndClose(Map<Integer, Directions> mappedDirections) {
+	public void writeOutAndClose(Directions reducedDirections) {
 		
 		try {
-			this.setMappedDirections(mappedDirections);
-			out.writeObject(this.getMappedDirs());
-			out.flush();
-			readAppend = in.readObject();
-			if(readAppend!=null){
-				hasAPI=true;
+			if (reducedDirections == null ){
+				out.writeObject("null");
+				out.flush();
+			}else{
+				out.writeObject(reducedDirections);
+				out.flush();
 			}
 	        in.close();
 	        out.close();
 	    } catch (IOException ioException) {
 	    	ioException.printStackTrace();
-	    }catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Object getReadAppend() {
-		return readAppend;
-	}
-
-	public boolean isHasAPI() {
-		return hasAPI;
+	    }
 	}
 }

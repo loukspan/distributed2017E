@@ -5,30 +5,55 @@ import java.net.*;
 import java.util.*;
 import model.*;
 import okhttp3.*;
+import workers.*;
 
-public class Master implements MasterImp{
-	
-	private Directions askedDirections;
-	private Directions ourDirections;
+public class Master extends Thread implements MasterImp{
+	private boolean goneTOApi=false;
+	private ObjectOutputStream workerOut=null;
+	private ServerSocket providerSocket = null;
+    private Socket connection, requestSocketForWorker = null;
+	private Directions askedDirections,ourDirections;
 	private static LinkedList<Directions> cache;
-	private static Map<Integer, Directions> mappedDirections=null;;
-	private static ServerMasterforClient serverMasterforClient;
+	private static Map<Integer, Directions> mappedDirections=null;
+	private static Thread serverMasterforClient;
+	
 	public Master(){
 		cache = new LinkedList<Directions>();
 	}
 
 	public void initialize(){
-		waitForNewQueriesThread();
-		sendResultsToClient();
-		//askedDirections = new Directions(1, 1, 1, 45454);
-		//startClientForMapper();
-		//MapWorker mapWorker = new MapWorker();
-		//mappedDirections=mapWorker.map();
-		//startClientforReducer(mappedDirections);
+		while(true){
+			waitForNewQueriesThread();
+			askedDirections = ((ServerMasterforClient) serverMasterforClient).getAskedDirections();
+			ourDirections = searchCache(askedDirections);
+			if(ourDirections==null){
+				/*MapWorker mapWorker = new MapWorker();
+				mappedDirections = mapWorker.map();
+				ReduceWorker reduceWorker=new ReduceWorker(mappedDirections, askedDirections);
+				ourDirections= reduceWorker.reduce(mappedDirections);*/
+				startClientForMapper();
+				startClientforReducer(mappedDirections);
+			}
+			
+			if(ourDirections==null){				
+				ourDirections=askGoogleDirectionsAPI(askedDirections.getStartlat(),askedDirections.getStartlon(),
+					askedDirections.getEndlat(),askedDirections.getEndlon());
+				goneTOApi=true;
+			}
+			updateCache(ourDirections);
+			distributeToMappers();
+			System.out.println(ourDirections.toString());
+			sendResultsToClient();
+			askedDirections = null; ourDirections = null;
+		}		
 	}
 	
 	public void waitForNewQueriesThread(){
-		openServerForClient();
+		if(connection!=null){
+			((ServerMasterforClient) serverMasterforClient).read();
+		}else{
+			openServerForClient();
+		}
 	}
 	
 	public Directions searchCache(Directions dir){
@@ -38,14 +63,15 @@ public class Master implements MasterImp{
 			if(dir.equals(idir))
 				return idir;
 		}
-		return idir;
+		return null;
 	}
 	
 	public void distributeToMappers(){
-		/**
-		 * TODO: Fix Thread to open it again in all methods
-		 */
-
+		if(goneTOApi){
+			sendFromAPItoWorker(ourDirections);
+			return;
+		}
+		sendFromAPItoWorker(null);
 	}
 	
 	public void waitForMappers(){
@@ -60,7 +86,7 @@ public class Master implements MasterImp{
 		
 	}
 	
-	public Directions askGoogleDirectionsAPI(String startlat, String startlon, String endlat, String endlon){
+	public Directions askGoogleDirectionsAPI(double startlat, double startlon, double endlat, double endlon){
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+startlat+","+startlon+"&destination="+endlat+","+endlon+"&key=AIzaSyB3ZUeeQPpFDS1SsD5KwIOiA9xyC8pBQM0";
 		return new Directions(sendGet(url));
 	}
@@ -88,20 +114,17 @@ public class Master implements MasterImp{
 	}
 	
 	public void sendResultsToClient(){
-		ourDirections= new Directions(45, 1, 1, 1);
-		serverMasterforClient.setReducedDirections(ourDirections);
-		serverMasterforClient.write(serverMasterforClient.getReducedDirs());
-		/*synchronized(serverMasterforClient){
-			serverMasterforClient.setReducedDirections(ourDirections);
-			try {
-				serverMasterforClient.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
-		//serverMasterforClient.close();
+		((ServerMasterforClient)serverMasterforClient).write(ourDirections);
+		try {
+	      connection.close();
+	      providerSocket.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+		serverMasterforClient=null;	providerSocket=null; connection=null;
 	}
+	
+	
 	
 	// HTTP GET request using OKHTTP
 	private String sendGet(String url){
@@ -120,32 +143,37 @@ public class Master implements MasterImp{
 		      .url(url)
 		      .build();
 		  try(Response response = client.newCall(request).execute()){
+			  //System.out.println(response.body().string());
 			  return response.body().string();
 		  }  
 	}
 	
 	private void startClientForMapper() {
-		Socket requestSocket = null;
 		ObjectInputStream inputStream = null;
-		ObjectOutputStream out = null;
+		
         try {              
-            requestSocket = new Socket("192.168.1.73", 4231);
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
-            inputStream = new ObjectInputStream(requestSocket.getInputStream());
-            out.writeObject(askedDirections);
-            out.flush();
+            requestSocketForWorker = new Socket("192.168.1.87", 4232);
+            workerOut = new ObjectOutputStream(requestSocketForWorker.getOutputStream());
+            inputStream = new ObjectInputStream(requestSocketForWorker.getInputStream());
+            workerOut.writeObject(askedDirections);
+            workerOut.flush();
             this.mappedDirections= ((Map<Integer, Directions>) inputStream.readObject());
-            System.out.println(mappedDirections.get(0).toString());
-            //ActionsForMappers actionsForMappers = new ActionsForMappers(requestSocket, askedDirections);
-            //actionsForMappers.run();
-            //mappedDirections = actionsForMappers.getMappedDirs();
             
         } catch (Exception e) {
         	e.printStackTrace();
         	System.err.println(e.getMessage());
-		} finally {
+		}
+	}
+	
+	private void sendFromAPItoWorker(Directions ourDirections) {
+		try {
+		  workerOut.writeObject(ourDirections);
+	      workerOut.flush();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }finally {
             try {
-                requestSocket.close();
+                requestSocketForWorker.close();                
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -156,15 +184,21 @@ public class Master implements MasterImp{
         Socket requestSocket = null;
         ObjectOutputStream out=null;
         ObjectInputStream inputStream = null;
-        Directions message;
         try {
               
-            requestSocket = new Socket("172.16.2.46", 5000);
+            requestSocket = new Socket("192.168.1.94", 4005);
             out= new ObjectOutputStream(requestSocket.getOutputStream());
             inputStream = new ObjectInputStream(requestSocket.getInputStream());
             out.writeObject(mappedDirections);
             out.flush();
-            this.ourDirections = ((Directions)inputStream.readObject());
+            out.writeObject(askedDirections);
+            out.flush();
+            Object ourObject= inputStream.readObject();
+            if(ourObject.toString().equals("null")){
+            	this.ourDirections=null;
+            }else{
+                this.ourDirections = ((Directions)ourObject);
+            }
             //ActionsForReducer actionsForReducer = new ActionsForReducer(requestSocket, mappedDirections);
             //actionsForReducer.start();
             
@@ -181,14 +215,15 @@ public class Master implements MasterImp{
     }	
     
 	private void openServerForClient() {
-		ServerSocket providerSocket = null;
-	    Socket connection = null;
+		
         
             try {
-				providerSocket = new ServerSocket (4321);
-				connection = providerSocket.accept();
-				serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
-				serverMasterforClient.start();
+            	if(providerSocket==null){
+		            providerSocket = new ServerSocket (4321);
+					connection = providerSocket.accept();
+					serverMasterforClient = new ServerMasterforClient(connection, askedDirections);
+				}
+				serverMasterforClient.run();
 				//serverMasterforClient.setReducedDirections(new Directions(22,45,745,45));
 				//serverMasterforClient.writeOutAndClose();
 			} catch (Exception e) {

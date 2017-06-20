@@ -1,17 +1,23 @@
 package workers;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
+
 import model.Directions;
+import model.ServerReducerForMaster;
+import model.ServerWorkerForMaster;
+
 import java.io.*;
 import java.net.*;
 
 
 
 public class ReduceWorker implements Worker, ReduceWorkerImp{
-	private Directions askedDirections;
-	private static Map<Integer, Directions> reducedDirections=null;
+	private Directions askedDirections, reducedDirections;
+	private static Map<Integer, Directions> mappedDirections=null;
+	private ServerReducerForMaster serverReducerForMaster;
 	public ReduceWorker(Map<Integer, Directions> map, Directions askedDirections){
-		reducedDirections=map;
+		mappedDirections=map;
 		this.askedDirections=askedDirections;
 	}
 	public ReduceWorker() {
@@ -22,32 +28,36 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 	}
 
 
-	public Map<Integer, Directions> getReducedDirections() {
+	public Directions getReducedDirections() {
 		return reducedDirections;
 	}
 	
-	private void setReducedDirections(Map<Integer, Directions> reducedDirections) {
+	private void setReducedDirections(Directions reducedDirections) {
 		this.reducedDirections= reducedDirections;
 	}
 	
 	public Directions reduce(Map<Integer, Directions> mp) {
 		/*Directions directions =*/
-		Directions counted;
+		Directions counted = null;
+		try {
+			counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(this.askedDirections)).
+					map(p->p.getValue()).reduce((sum, p)->sum).get();
+		} catch (NoSuchElementException e) {
+			System.out.println(e.getMessage());
+		}
 		
-		counted = (Directions) mp.entrySet().stream().parallel().filter(p->p.getValue().equals(askedDirections)).
-				map(p->p.getValue()).reduce((sum, p)->sum).get();
 		return counted;
 	}
 	
 	public void sendResults(Directions dirs) {
-		
+		serverReducerForMaster.writeOutAndClose(dirs);
 	}
 
 
 	public void initialize() {
-		
-		/*sendResults(reduce(reducedDirections));*/
-		
+		openServerForMaster();
+		reducedDirections=reduce(this.mappedDirections);
+		sendResults(reducedDirections);
 	}
 
 
@@ -55,50 +65,22 @@ public class ReduceWorker implements Worker, ReduceWorkerImp{
 		// TODO Auto-generated method stub
 		
 	}
-
- 
-    public void openServer() {
-        ServerSocket providerSocket = null;
+	
+	private void openServerForMaster() {
+		ServerSocket providerSocket = null;
         Socket connection = null;
-        Map<Integer, Directions> message = null;
-        try {
-            providerSocket = new ServerSocket (4321);
-             
- 
-            while (true) {
-                 
-                connection = providerSocket.accept();
-                ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-                
-                do {
-                    try {
-                        message = ((Map<Integer,Directions>)in.readObject());
-                        System.out.println(connection.getInetAddress().getHostAddress()+ " >" + message.get(1).getDirs());
-                        out.writeObject(reduce(message));
-                        out.flush();
-                        break;
-                    } catch (ClassNotFoundException classnot) {
-                        System.err.println("Data received in unknown format");
-                    }catch (Exception e) {
-                    	System.out.println(e.getMessage());
-					}
-                } while (true);
-                 
-                in.close();
-                out.close();
-                connection.close();
-            }
-                 
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
+         
             try {
-                providerSocket.close();
-            } catch (IOException ioException) {
+                providerSocket = new ServerSocket (4005);
+                connection = providerSocket.accept();
+                serverReducerForMaster = new ServerReducerForMaster(connection);
+                serverReducerForMaster.run();
+        		this.askedDirections=serverReducerForMaster.getAskedDirections();
+                this.mappedDirections=serverReducerForMaster.getMappedDirs();
+            } catch (UnknownHostException unknownHost) {
+                System.err.println("You are trying to connect to an unknown host!");
+            }catch (IOException ioException) {
                 ioException.printStackTrace();
-            }
-        }
-    
-   }
+            }    
+	}
 }
